@@ -281,15 +281,16 @@ end
 
 if GetModConfigData("telestaff_rework") then
     AllRecipes["telebase"].ingredients = {
-        Ingredient("purplegem", 3),
+        Ingredient("nightmarefuel", 4),
         Ingredient("livinglog", 4),
-        Ingredient("nightmarefuel", 4)
+        Ingredient("goldnugget", 8),
+        Ingredient("purplegem", 3)		
     }
-    AllRecipes["telestaff"].ingredients = {
-        Ingredient("nightmarefuel", 2),
-        Ingredient("spear", 1),
-        Ingredient("purplegem", 1)
-    }
+    --AllRecipes["telestaff"].ingredients = {
+        --Ingredient("nightmarefuel", 2),
+        --Ingredient("spear", 1),
+        --Ingredient("purplegem", 1)
+    --}
     AllRecipes["purpleamulet"].ingredients = {
         Ingredient("goldnugget", 3),
         Ingredient("nightmarefuel", 2),
@@ -371,7 +372,7 @@ ChangeSortKey("diseasecurebomb", "premiumwateringcan", "TOOLS", true)
 ChangeSortKey("diseasecurebomb", "lifeinjector", "RESTORATION", true)
 
 if GetModConfigData("snowstorms") then
-    AddRecipe2("ice", { Ingredient("snowball_throwable", 4) }, TECH.SCIENCE_ONE,
+    AddRecipe2("ice", { Ingredient("snowball_throwable", 4) }, TECH.SCIENCE_ONE, nil,
         { "REFINE" })
     ChangeSortKey("ice_snowball", "beeswax", "REFINE", true)
 end
@@ -672,7 +673,7 @@ ChangeSortKey("powercell", "winona_battery_high", "CHARACTER", true)
 
 AddRecipe2(
     "winona_upgradekit_electrical",
-    { Ingredient("goldnugget", 6), Ingredient("sewing_tape", 2), Ingredient(GLOBAL.TUNING.DSTU.UPDATE_CHECK and "wagpunk_bits" or "trinket_6", GLOBAL.TUNING.DSTU.UPDATE_CHECK and 6 or 2) },
+    { Ingredient("goldnugget", 6), Ingredient("sewing_tape", 2), Ingredient("wagpunk_bits", 4) },
     TECH.SCIENCE_TWO,
     { builder_tag = "handyperson" },
     { "CHARACTER", "LIGHT" }
@@ -1373,6 +1374,9 @@ if GetModConfigData("wixie_walter") then
         inst:DoTaskInTime(0, function(inst)
             if Prefabs["obsidian"] then
                 AllRecipes["slingshotammo_obsidian"].ingredients = { Ingredient("obsidian", 1) }
+            end
+            if Prefabs["hail"] then
+                AllRecipes["ice"].ingredients = { Ingredient("hail", 4) }
             end
         end)
     end)

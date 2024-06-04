@@ -19,6 +19,14 @@ TUNING = GLOBAL.TUNING
 local ia_check = GLOBAL.KnownModIndex:IsModEnabled("workshop-1467214795")
 local tfw_check = GLOBAL.KnownModIndex:IsModEnabled("workshop-1171138081")
 
+--day/month > month/day
+local function Date(day, month)
+    local current_time = GLOBAL.os.time()
+    local current_date = GLOBAL.os.date("*t", current_time)
+
+    return current_date.month == month and current_date.day == day or false
+end
+
 TUNING.DSTU = {
     ----------------------------------------------------------------------------
     -- Armor
@@ -221,7 +229,7 @@ TUNING.DSTU = {
     -- Wigfrid
     BATTLESONG_FIRE_RESIST_MOD = 0, -- orig 33% fire resist
     WATHGRITHR_ARSENAL = GetModConfigData("wathgrithr_arsenal"),
-    WATHGRITHR_REWORK =  GetModConfigData("wathgrithr_rework_"),
+    WATHGRITHR_REWORK = GetModConfigData("wathgrithr_rework_"),
     -- Maxwell
     SHADOWWAXWELL_FUEL_COST = 2,
     SHADOWWAXWELL_HEALTH_COST = 15,
@@ -306,7 +314,8 @@ TUNING.DSTU = {
     GREEN_VOMIT_NUTRIENTS = { 0, 0, 24 },
     PINK_VOMIT_NUTRIENTS = { 24, 0, 0 },
     PALE_VOMIT_NUTRIENTS = { 8, 8, 8 },
-    WAXWELL = GetModConfigData("waxwell"),
+	MUSHROOM_CHANGES = GetModConfigData("mushroom_changes"),
+
     ----------------------------------------------------------------------------
     -- Dynamic Boss Resistance
     ----------------------------------------------------------------------------
@@ -411,6 +420,10 @@ TUNING.DSTU = {
     WILTFLY_HEALTH = 4000 * GetModConfigData("mock_dragonfly_health_"),
     MOTHER_GOOSE_HEALTH = 6000 * GetModConfigData("mothergoose_health_"),
 
+
+    DATES = {
+        APRIL_FOOLS = Date(1, 4),
+    }
 }
 
 -- [              DST Related Overrides                  ]
@@ -480,8 +493,6 @@ TUNING.AFFINITY_15_CALORIES_SUPERHUGE = 1.034
 
 -- TUNING.ANTLION_RAGE_TIME_INITIAL = TUNING.TOTAL_DAY_TIME * 4
 -- TUNING.ANTLION_RAGE_TIME_MAX = TUNING.TOTAL_DAY_TIME * 5
-
-
 
 -- TUNING.ARMORBRAMBLE_DMG = 10
 
@@ -597,9 +608,9 @@ local um_naughtiness = {
     fruitbat = 4,
     woodpecker = 2,
     snapdragon = 4,
-    snapdragon_buddy = 8,--wtf!!! doin't do that!!
+    snapdragon_buddy = 8, --wtf!!! doin't do that!!
 }
-for k,v in pairs(um_naughtiness) do
+for k, v in pairs(um_naughtiness) do
     GLOBAL.NAUGHTY_VALUE[k] = v
 end
 
@@ -607,18 +618,18 @@ end
 if GetModConfigData("kramped_buff") then
     GLOBAL.NAUGHTY_VALUE["glommer"] = 100
     TUNING.KRAMPUS_NAUGHTINESS_DECAY_PERIOD = math.huge
-	TUNING.KRAMPUS_THRESHOLD = 60
+    TUNING.KRAMPUS_THRESHOLD = 60
     TUNING.KRAMPUS_THRESHOLD_VARIANCE = 40
 end
 
 if GetModConfigData("waxwell_nerf") then
     TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWPROTECTOR = 0.2 --can summon 3 fighters
-    TUNING.SHADOWWAXWELL_PROTECTOR_DURATION = seg_time * 2 -- lasts half of the duration
+    TUNING.SHADOWWAXWELL_PROTECTOR_DURATION = seg_time * 2    -- lasts half of the duration
     TUNING.SHADOW_PILLAR_DURATION_BOSS = 4
     TUNING.SHADOW_PILLAR_BREAK_MULT =
     {
-        MIN = 1,  -- but breaks slower
-        MAX = 2,   --breaks faster with the more attacked a cage is.
+        MIN = 1, -- but breaks slower
+        MAX = 2, --breaks faster with the more attacked a cage is.
     }
 
     TUNING.WAXWELLJOURNAL_SPELL_COST.SHADOW_PILLARS = 0.25 --costs 25%

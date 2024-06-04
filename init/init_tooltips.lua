@@ -161,7 +161,7 @@ end
 
 
 if TUNING.DSTU.TELESTAFF_REWORK then
-    TOOLTIPS.TELESTAFF = "- Can select its destination.\n- Increased uses."
+    TOOLTIPS.TELESTAFF = "- Can select its destination.\n- Increased uses for items and objects.\n- Can teleport other players without PVP enabled."
     TOOLTIPS.TELEBASE = "- No longer requires gems per teleport."
 end
 
@@ -339,7 +339,7 @@ if TUNING.DSTU.WICKERNERF_BEEBOOK then
 end
 
 if TUNING.DSTU.WATHGRITHR_ARSENAL then
-    TOOLTIPS.SPEAR_WATHGRITHR_LIGHTNING = "- The lightning charge attack will consume additional durability per mob hit up to a limit.\n - The Charged Elding Spear can be recharged with lightning."
+    TOOLTIPS.SPEAR_WATHGRITHR_LIGHTNING = "- The lightning charge attack will consume additional durability per mob hit up to a limit.\n - Regains durability when struck by lightning or when charged at generators."
     TOOLTIPS.WATHGRITHR_SHIELD = "- Blocking attacks will consume durability by 60% of the damage taken.\n - Each additional perk reduces it by 20%."
 end
 

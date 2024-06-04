@@ -1043,6 +1043,7 @@ Assets = {
 
 	Asset("ANIM", "anim/mara_boss1.zip"),
 	Asset("ANIM", "anim/mara_boss1_bullets.zip"),
+	Asset("ANIM", "anim/um_WITCH.zip"),
 	
 	-- Pyre Nettle stuff
 	Asset("ANIM", "anim/um_pyre_nettles.zip"),
@@ -2164,5 +2165,8 @@ Assets = {
 
 	Asset( "IMAGE", "images/wathgrithr_rework_skilltree.tex" ),
     Asset( "ATLAS", "images/wathgrithr_rework_skilltree.xml" ),
+
+	Asset( "IMAGE", "images/wolfgang_rework_skilltree.tex" ),
+    Asset( "ATLAS", "images/wolfgang_rework_skilltree.xml" ),
 
 }
