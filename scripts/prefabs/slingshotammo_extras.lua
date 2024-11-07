@@ -274,6 +274,16 @@ local function OnExtinguishFn(inst)
     end
 end
 
+local function OnExplodeFn(inst)
+    SpawnPrefab("explode_small").Transform:SetPosition(inst.Transform:GetWorldPosition())
+end
+
+local function OnPutInInv(inst, owner)
+    if owner.prefab == "mole" then
+        inst.components.explosive:OnBurnt()
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -1537,6 +1547,12 @@ local function cracker_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst:AddTag("explosive")
+	
+    inst:AddComponent("explosive")
+    inst.components.explosive:SetOnExplodeFn(OnExplodeFn)
+    inst.components.explosive.explosivedamage = 10
+    inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInv)
 
     return inst
 end
@@ -1550,9 +1566,9 @@ local function honey_fn()
 
     inst:AddComponent("edible")
     inst.components.edible.foodtype = FOODTYPE.GOODIES
-    inst.components.edible.hungervalue = 0
-    inst.components.edible.sanityvalue = 1
-    inst.components.edible.healthvalue = 1
+    inst.components.edible.hungervalue = 0.5
+    inst.components.edible.sanityvalue = 0.1
+    inst.components.edible.healthvalue = 0.2
 
     return inst
 end
