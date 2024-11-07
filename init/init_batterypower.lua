@@ -65,6 +65,10 @@ local SALT =
 	{
 		power = TUNING.MED_FUEL * 2,
 	},
+	["slingshotammo_salt"] =
+	{
+		power = TUNING.MED_FUEL / 7.5,
+	},
 }
 
 for k, v in pairs(SALT) do
