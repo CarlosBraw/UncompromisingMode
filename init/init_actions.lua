@@ -276,6 +276,26 @@ if TUNING.DSTU.WARLY_BUTCHER then
     end
 end
 
+if TUNING.DSTU.WXLESS then
+	local BREAK_DOWN_MODULE = GLOBAL.Action({ priority=4, mount_valid=true})
+	BREAK_DOWN_MODULE.id = "BREAK_DOWN_MODULE"
+	BREAK_DOWN_MODULE.str = "Dismantle"
+	AddAction(BREAK_DOWN_MODULE)
+	BREAK_DOWN_MODULE.fn = function(act)
+		if act.invobject and act.invobject.components.data_extractor and act.target.components.upgrademodule then
+			return act.invobject.components.data_extractor:BreakDown(act.target, act.doer)
+		end
+	end
+	AddComponentAction("USEITEM", "data_extractor", function(inst, doer, target, actions, right) 
+		if doer:HasTag('upgrademoduleowner') and target:HasTag('upgrademodule') then 
+			table.insert(actions, GLOBAL.ACTIONS.BREAK_DOWN_MODULE) 
+		end 
+	end)
+
+	AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(GLOBAL.ACTIONS.BREAK_DOWN_MODULE, "dolongaction"))
+	AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(GLOBAL.ACTIONS.BREAK_DOWN_MODULE, "dolongaction"))
+end
+
 GLOBAL.STRINGS.ACTIONS.START_CHANNELCAST.MOONFALL = "Start Casting"
 
 local _Start_ChannelCastStrFn = GLOBAL.ACTIONS.START_CHANNELCAST.strfn
@@ -298,5 +318,32 @@ AddComponentAction("USEITEM", "fuel", function(inst, doer, target, actions)
         if inst:HasTag("SLUDGE_fuel") and (target:HasTag("BURNABLE_fueled") or target:HasTag("CHEMICAL_fueled") or target:HasTag("CAVE_fueled")) then
             table.insert(actions, inst:GetIsWet() and GLOBAL.ACTIONS.ADDWETFUEL or GLOBAL.ACTIONS.ADDFUEL)
         end
+    end
+end)
+
+local ENV = env
+
+GLOBAL.setfenv(1, GLOBAL)
+
+local UM_ACTIVATABLE_ITEM = Action({ mount_valid = true, priority = 1, rmb = true })
+UM_ACTIVATABLE_ITEM.id = "UM_ACTIVATABLE_ITEM"
+UM_ACTIVATABLE_ITEM.str = STRINGS.ACTIONS.UM_ACTIVATABLE_ITEM
+ENV.AddAction(UM_ACTIVATABLE_ITEM)
+
+UM_ACTIVATABLE_ITEM.strfn = function(act)
+    return act.invobject ~= nil and act.invobject.actiontype ~= nil and act.invobject.actiontype or STRINGS.ACTIONS.UM_ACTIVATABLE_ITEM.GENERIC
+end
+
+UM_ACTIVATABLE_ITEM.fn = function(act)
+    local item = act.invobject
+    if item ~= nil and item.components.um_activatable_item ~= nil then
+        item.components.um_activatable_item:Activate(act.doer)
+        return true
+    end
+end
+
+ENV.AddComponentAction("INVENTORY", "um_activatable_item", function(inst, doer, actions, right)
+    if inst ~= doer then
+        table.insert(actions, ACTIONS.UM_ACTIVATABLE_ITEM)
     end
 end)

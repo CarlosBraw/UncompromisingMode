@@ -102,7 +102,6 @@ local prefab_post = {
     "armor_ruins",
     "sweatervest",
     "fans",
-    "skeletonhat",
     --	"rock_avocado_fruit_sprout_sapling",
     "icepack",
     "heatrock",
@@ -203,7 +202,11 @@ local prefab_post = {
 	"otter",
     "winona_telebrella",
     "stash_map",
-    "mushtrees"
+    "mushtrees",
+    --"monkeyhut",
+	--"lava_pond",
+	"cookiecutter",
+    "seastack", --loot changes
 }
 
 local stategraph_post = {
@@ -249,11 +252,11 @@ if GetModConfigData("wixie_walter") then
     local wixie_prefabs = {
         "extra_claustrophobia_checks", -- extra tag that wixie checks when registering claustrophobia, for stuff like jackolanterns and ruins relics
         "slingshot",                   -- stuff for new slingshot aiming and wixie exclusivity
+		"slingshotammo",                   -- no skill
         "walter",                      -- all of walters things, including woby action
         "wobysmall",
         "wobybig",
         "wormhole",      -- wixie loses more sanity from wormholes
-        "slingshotammo", -- removes hunger value from slingshot ammo, preventing slurtle feeding strats
         "coconut",       -- shoot a coconut
 		"sculptingtable" -- Sculpting table crashes if picker inventory is nil
     }
@@ -296,10 +299,6 @@ if GetModConfigData("wixie_walter") then
     RemapSoundEvent("dontstarve/characters/wixie/eye_rub_vo", "wixie/characters/wixie/eye_rub_vo")
     RemapSoundEvent("dontstarve/characters/wixie/carol", "wixie/characters/wixie/carol")
     RemapSoundEvent("dontstarve/characters/wixie/sinking", "wixie/characters/wixie/sinking")
-end
-
-if not GLOBAL.TUNING.DSTU.UPDATE_CHECK then
-    table.insert(prefab_post, "slurtle_shellpieces")
 end
 
 if GetModConfigData("hangyperds") then
@@ -423,9 +422,6 @@ if GetModConfigData("harder_krampus") then
     table.insert(stategraph_post, "krampus")
 end
 
-if GetModConfigData("noauradamage_butterfly") then
-    table.insert(prefab_post, "butterfly")
-end
 
 if GetModConfigData("beefalo_nerf") then
     table.insert(component_post, "rider")
@@ -445,13 +441,11 @@ end
 --	table.insert(prefab_post, "boat")
 -- end
 
-
-table.insert(prefab_post, "shadowchesspieces") --changes to  all 3 pieces. (no collision and shadowcrown loot)
-
 if GetModConfigData("changed_shadow_pieces") then
     --table.insert(prefab_post, "shadow_knight")
     table.insert(stategraph_post, "shadow_bishop")
     --table.insert(stategraph_post, "shadow_knight")
+	table.insert(prefab_post, "shadowchesspieces") --changes to  all 3 pieces. (no collision and shadowcrown loot)	
 end
 
 if GetModConfigData("hambatnerf") then
@@ -489,15 +483,6 @@ end
 if GetModConfigData("smog") then
     table.insert(prefab_post, "dragoonegg")
     table.insert(component_post, "geyserfx")
-end
-
-if not TUNING.DSTU.UPDATE_CHECK then
-    table.insert(prefab_post, "cannonballs")
-    table.insert(component_post, "weighable")
-end
-
-if GetModConfigData("sharpshooter_monkeys_") and not TUNING.DSTU.UPDATE_CHECK then
-    table.insert(brain_post, "powdermonkey")
 end
 
 modimport("postinit/sim")

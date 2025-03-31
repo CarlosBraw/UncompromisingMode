@@ -32,6 +32,12 @@ STRINGS.SKIN_DESCRIPTIONS.winky_none = "She's a fan of shiny things."
 STRINGS.ACTIONS.CREATE_BURROW = "Make Burrow"
 STRINGS.ACTIONS.ACTIVATE.RECRUITRAT = "Recruit A Rat"
 
+STRINGS.ACTIONS.UM_ACTIVATABLE_ITEM = {
+            GENERIC = "Use",
+            PONDER = "Ponder",
+            MORPH = "Morph",
+        }
+
 STRINGS.ACTIONS.TURNOFF.HARPOON = "Break Reel"
 STRINGS.ACTIONS.ACTIVATE.HARPOON = "Reel"
 STRINGS.ACTIONS.CASTSPELL.HARPOON = "Throw Magnerang"
@@ -76,7 +82,7 @@ if GetModConfigData("bernie_buffs") then
     STRINGS.CHARACTER_DESCRIPTIONS.willow = STRINGS.CHARACTER_DESCRIPTIONS.willow .. "\n󰀕Hugging Bernie keeps the shadows at bay"
 end
 if GetModConfigData("wxless") then
-    STRINGS.CHARACTER_DESCRIPTIONS.wx78 = STRINGS.CHARACTER_DESCRIPTIONS.wx78 .. "\n󰀕Circuits drain charge and degrade overtime\n󰀕Motherboard has more space and powers all components until last charge\n󰀕Resting and eating refills internal batteries"
+    STRINGS.CHARACTER_DESCRIPTIONS.wx78 = STRINGS.CHARACTER_DESCRIPTIONS.wx78 .. "\n󰀕Circuits drain charge and degrade overtime\n󰀕Powers all components until last charge\n󰀕Resting and eating refills internal batteries"
 end
 if GetModConfigData("wx78") then
     STRINGS.CHARACTER_DESCRIPTIONS.wx78 = STRINGS.CHARACTER_DESCRIPTIONS.wx78 .. "\n󰀕Systems are not repaired via lightning"
@@ -86,13 +92,13 @@ if GetModConfigData("wickerbottom") then
         "\n󰀕Reading requires brainpower"
 end
 STRINGS.CHARACTER_DESCRIPTIONS.wes = STRINGS.CHARACTER_DESCRIPTIONS.wes .. "\n󰀕Expanded inner dialogue" --"\n󰀕Pengulls are fond of mimes"
-STRINGS.CHARACTER_DESCRIPTIONS.waxwell = STRINGS.CHARACTER_DESCRIPTIONS.waxwell .. "\n󰀕Can make a pact to summon his old puppets and shadow equipment at will"
+STRINGS.CHARACTER_DESCRIPTIONS.waxwell = STRINGS.CHARACTER_DESCRIPTIONS.waxwell .. "\n󰀕Can make a pact to regain his old tricks"
 if GetModConfigData("wolfgang") then
-    STRINGS.CHARACTER_DESCRIPTIONS.wolfgang = "*Stronger on a full belly\n*Grows mightier when well fed and calm minded\n*Is afraid of monsters and the dark\n*Is quite the showboat"
+    STRINGS.CHARACTER_DESCRIPTIONS.wolfgang = "󰀕Stronger on a full belly\n󰀕Grows mightier when fed and calm\n󰀕Is quite the showboat\n*Is afraid of monsters and the dark"
 end
 if GetModConfigData("warly_food_taste_") then
     STRINGS.CHARACTER_DESCRIPTIONS.warly = STRINGS.CHARACTER_DESCRIPTIONS.warly ..
-        "\n󰀕Absorbs nutrients better, but prefers more variety"
+        "\n󰀕Absorbs nutrients better...\n󰀕But prefers more variety"
 end
 if GetModConfigData("warly_butcher_") then
     STRINGS.CHARACTER_DESCRIPTIONS.warly = STRINGS.CHARACTER_DESCRIPTIONS.warly ..
@@ -102,7 +108,7 @@ if GetModConfigData("winonaworker") then
     STRINGS.CHARACTER_DESCRIPTIONS.winona = STRINGS.CHARACTER_DESCRIPTIONS.winona .. "\n󰀕Works hard until lunch"
 end
 if GetModConfigData("wortox") then
-    STRINGS.CHARACTER_DESCRIPTIONS.wortox = STRINGS.CHARACTER_DESCRIPTIONS.wortox .. "\n󰀕Souls take time to heal and heal less\n󰀕Some weak creatures have no soul"
+    STRINGS.CHARACTER_DESCRIPTIONS.wortox = STRINGS.CHARACTER_DESCRIPTIONS.wortox .. "\n󰀕Souls take time to heal\n󰀕Some weak creatures have no soul"
 end
 if GetModConfigData("wigfrid") then
     STRINGS.CHARACTER_DESCRIPTIONS.wathgrithr = STRINGS.CHARACTER_DESCRIPTIONS.wathgrithr .. "\n󰀕Combat is less sustaining"
@@ -348,7 +354,7 @@ STRINGS.ACTIONS.SET_CUSTOM_NAME = "Set Custom Name"
 
 local SkillTreeDefs = GLOBAL.require("prefabs/skilltree_defs")
 if SkillTreeDefs.SKILLTREE_DEFS["wilson"] ~= nil then
-    SkillTreeDefs.SKILLTREE_DEFS["wilson"].wilson_alchemy_4.desc = STRINGS.SKILLTREE.WILSON.WILSON_ALCHEMY_4_DESC .. "\nTransform 3 Monster Morsels into a Monster Meat and Monster Meat into 2 Monster Morsels."
+    SkillTreeDefs.SKILLTREE_DEFS["wilson"].wilson_alchemy_4.desc = "Transform 3 Morsels into a Meat. Transform a Meat into 2 Morsels.\nTransform 3 Monster Morsels into a Monster Meat.\nTransform a Monster Meat into 2 Monster Morsels."
 end
 
 if SkillTreeDefs.SKILLTREE_DEFS["willow"] ~= nil then
@@ -382,7 +388,7 @@ STRINGS.UM_LOADINGTIPS = {
     AMALGAMS = "\"Whoever designed these clockwork thingamawatzits should have installed a surge protector!\" -W",
     RNES = "\"I feel like there's something watching us at night...\" - W",
     MOONMAW = "Like a moth to a flame, a Dragonfly once flew too close to the moon. But unlike Icarus, her story doesn't end there...",
-    MUTATIONS = "Each Deerclops you find is different than the last.",
+    MUTATIONS = "Each Deerclops you find may be different than the last.",
     RUINS = "The Shadows are stirring, and long buried clockworks have resurfaced. Keep your wits about you.",
     CONFIGS = "Not a fan of some changes? Need a change of pace? Check out Uncompromising Mode's configuration options! Almost everything is configurable!",
     WIKI = "Lost? Confused? Hungering for knowledge? Visit Uncompromising Mode's Wiki! It's... *mostly* accurate! (Make sure to use Wiki.gg!)",
@@ -398,9 +404,9 @@ STRINGS.UM_LOADINGTIPS = {
     CRAFTINGTOOLTIP = "Items with a small \"UM\" icon next to them in the crafting menu have been changed. You can mouse over the icon to get more information about the change.",
     NOCOLLISION = "Most exploitable collisions have been removed. This includes signs, statues, giant crops, shell clusters, and more.",
     MAXHPLOSS = "Freezing, overheating, starving and more can reduce max health.",
-    WEATHER = "Keep an eye out on each season. Every season has something new to encounter.",
+    WEATHER = "Keep an eye out during each season. Every season has something new to encounter.",
     MAXHEALTHHEALING = "Warly's Salt Spice can restore lost max health.",
-    SLEEPING = "Sleeping has been considerably improved. Stats are gained faster and can lost max can he healed up to a certain threshold.",
+    SLEEPING = "Sleeping has been considerably improved. Stats are gained faster and lost max health can be recovered from a certain threshold.",
     ALPHAGOAT = "\"That's a mean lookin' goat. I bet it'd make some fine dinin'! Ouch ouch ouch! Run! He's angry!\" - W",
     SNOWSTORMS = "\"Board up the windows, there is definetly a storm coming!\" - W",
     OCEAN_STEERING = "Boat rudders help with steering boats, increasing turn speed and allowing the boat to make sharper turns. The Captain's Hat also further increases steering speed.",

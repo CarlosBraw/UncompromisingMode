@@ -6,17 +6,16 @@ if not folder_name:find("workshop-") then
 end
 
 --RELEASE.MAJOR.MINOR.FIX
-local _version = "1.4.20.1"
+local _version = "1.5.0.4"
 description = [[
-󰀔 [ Version: ]] .. _version .. [[ - "Under the Weather Pt.1" ]
+󰀔 [ Version: ]] .. _version .. [[ - "Wixie, Walter, Woby!" ]
 
 Uncompromising Mode increases the risk and reward for those who have mastered Don't Starve Together.
 
 Latest update features:
-- New spring weather, uncluding storms, tornados, and cave flooding.
-- Alpha Goats will appear in goat herds, to protect their own, and have consistant loot.
-- Krampii will more effectively steal things and do their job.
-- A ton of misc. changes, ranging from Wickerbottom's books to hounds.
+- Implemented work in progress skilltrees for Wixie.
+- Added updated functionality and options for Walter (mostly Woby).
+- Reworked the Feather Frock to block flat amounts of damage using feathers.
 
 󰀏 NEXT UPDATE: ?????? ?? ??? ????]]
 
@@ -41,7 +40,7 @@ all_clients_require_mod = true
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
 
-server_filter_tags = { "uncompromising", "DSTU", "collab", "overhaul", "hard", "difficult", "madness", "challenge",
+server_filter_tags = { "uncomp", "UM", "uncompromising", "DSTU", "collab", "overhaul", "hard", "difficult", "madness", "challenge",
     "hardcore" }
 
 priority = -10
@@ -120,20 +119,17 @@ configuration_options = {
         hover = "Enable this for a alternate Night Vision filter if you experience eye strain.",
         options =
         {
-            { description = "Red", data = "red", hover = "Red filter, like moggles." },
-            { description = "Black and White", data = "bnw", hover = "Black and White, like the original night vision." },
-            { description = "Default", data = "blue", hover = "Default, blue filter." }
+            { description = "Red",             data = "red",  hover = "Red filter, like moggles." },
+            { description = "Black and White", data = "bnw",  hover = "Black and White, like the original night vision." },
+            { description = "Default",         data = "blue", hover = "Default, blue filter." }
         },
         default = "blue",
+        client = true
     },
 
     SkipSpace(),
 
     Header("Mod Compatibility"),
-
-    BinaryConfig("hungry_void", "Anti-Voidwalk",
-        "Disable this if you are using any mods that allow flight or traversal over the cave void.", true),
-    BinaryConfig("nofishyincrockpot", "No Fish in Crockpot", "Disable this if a mod requires live fish for some recipes.", true),
     BinaryConfig("worldgenmastertoggle", "Worldgen Master Toggle", "Toggles ALL worldgen.", true),
     SkipSpace(),
 
@@ -146,6 +142,8 @@ configuration_options = {
     --BinaryConfig("caved", "[IMPORTANT] Cave Config",
     --"Switches some things around so players who can't run Caves can still enjoy the game. ENABLE IF CAVES ARE ENABLED!",
     --true),
+    BinaryConfig("no_winter_growing_", "No Winter Growing",
+        "[BROKEN]Makes a few food sources such as Kelp and Stone Fruit not grow in Winter.", false),
     BinaryConfig("beefalo_nerf", "Beefalo Nerf", "Players will take half of the damage that the Beefalo takes.", true),
     {
         name = "fireloot",
@@ -157,8 +155,6 @@ configuration_options = {
             { description = "Explosion On", data = 3 } },
         default = 3
     },
-    BinaryConfig("durability", "Clothing Degradation",
-        "Winter and Rain protection clothing items become less effective when their durability drops.", false),
     BinaryConfig("harder_shadows", "Harder Nightmare Creatures",
         "Insanity is a bigger threat now. Those who pass the brink may never return.", true),
     BinaryConfig("longpig", "Long Pig", "Skeletons drop Long Pig to prevent Telltale Heart spam.", true),
@@ -210,6 +206,9 @@ configuration_options = {
     BinaryConfig("wixie_walter", "Wixie & Walter Rework",
         "Enable Uncompromising Mode's Wixie, the Delinquent, who expands on Walter's slingshot, while Walter gets new interactions and mechanics with Woby!",
         true),
+    BinaryConfig("woby_hunger_classic", "Classic Woby Hunger Meter",
+        "Enables the classic Uncompromising Mode version of Woby's hunger meter.",
+        true),
     --BinaryConfig("wixie_birds", "Wixie: Slingshot Nerfs", "Slingshots can't hit birds & rabbits.", true),			
     BinaryConfig("funny rat", "Winky", "Enable Uncompromising Mode's Winky, the Vile Vermin.", true),
     BinaryConfig("holy fucking shit it's wathom", "Wathom", "Enable Uncompromising Mode's Wathom, the Forgotten Parody.",
@@ -252,7 +251,7 @@ configuration_options = {
     BinaryConfig("no_bee_embers", "Willow - Reduced Embers", "All bees, birds and butterflies no longer drop embers.", true),
     --BinaryConfig("willow insulation", "Willow's Experimental Insulation",
     --"Willow's insulation is tweaked to be 120 on Summer and -120 on Winter.", false),
-    BinaryConfig("wendy", "Wendy", "Abigail is nerfed to not increase Wendy's maximum damage above average.", true),
+    BinaryConfig("wendy", "Wendy", "Petals inside Sisturn decay into Mourning Glory.", true),
     BinaryConfig("wx78", "WX-78", "No longer heals from lightning.", true),
     BinaryConfig("wxless", "WX Rework",
         "Changes the way WX's charge and circuit systems works, alongside the effects of circuits", true),
@@ -297,7 +296,7 @@ configuration_options = {
         "On Tentacles now spawns friendly tentacles that die over time, and do not drop tentacle spots.", true),
     BinaryConfig("the angler", "Wickerbottom - The Angler's",
         "\"The Angler's Survival Guide\" now takes 2 Hardened Slip Bobbers, instead of 2 Wooden Ball Bobbers.", true),
-    BinaryConfig("woodie_skilltree", "Woodie's Skilltree", "Some changes to Woodie's skilltrees to add trade-offs and buff underutilized skills.", true),
+    --BinaryConfig("woodie_skilltree", "Woodie's Skilltree", "Some changes to Woodie's skilltrees to add trade-offs and buff underutilized skills.", true),
     BinaryConfig("waxwell_nerf", "Maxwell - Nerfs", "Several nerfs to Maxwell to bring him down in power.", true),
     BinaryConfig("wolfgang", "Wolfgang Rework", "Wolfgang has a new skill tree, and mightiness is now a resource you spend to use special abilities.", true),
     BinaryConfig("wathgrithr_arsenal", "Wigfrid - Arsenal", "Changed wigfrid's new tools to not have infinite skills.", true),
@@ -314,8 +313,11 @@ configuration_options = {
     BinaryConfig("winonaworker", "Winona - Faster Working",
         "Winona now scales her work/picking efficiency, and tool/weapon durability, off of her hunger level. Drains hunger when taking actions.",
         true),
+    BinaryConfig("winonarose", "Winona - Fragile Rose", "Nerfs the fragile rose to not revive the player, instead preventing death when taking lethal damage.", true),
+    BinaryConfig("winonafishing", "Winona - Catapult Fishing", "Nerfs catapult fishing. Instead of killing fishes, catapults now launch fish.", true),
     BinaryConfig("winona_items", "Winona - New Items",
         "Gives Winona a toolbox, Electrical Upgrade Kit and Powercells.", true),
+    BinaryConfig("toolbox_tools", "Winona - Toolbox", "Allows tools to go in the Contraption Container.", false),
     BinaryConfig("winona_overcharging", "Winona - Overcharging", "Winona can overcharge several different items to further enhance their effects.", true),
     BinaryConfig("warly_butcher_", "Warly - Butchering",
         "Warly is a certified butcher, he will get more resources from kills in his inventory.",
@@ -324,9 +326,9 @@ configuration_options = {
         "Warly gets increased stats from food, like Singleplayer. However, he remembers foods for 3 days instead of 2.",
         true),
     BinaryConfig("wortox", "Wortox",
-        "Better teleports, worse sanity and healing from souls. Birds and butterflies are soulless.",
+        "Healing from souls are now overtime. Birds and Butterflies are soulless.",
         true),
-    BinaryConfig("wortox_beesouls", "Wortox - Bee Souls", "Toggle wether or not bees have souls.", true),
+    --BinaryConfig("wortox_beesouls", "Wortox - Bee Souls", "Toggle wether or not bees have souls.", true),
     --{
     --name = "wortox",
     --label = "Wortox",
@@ -620,8 +622,8 @@ configuration_options = {
     },
     BinaryConfig("insul_thermalstone", "Thermal Stone Rework",
         "Thermal Stones now have less insulation, but inherit some insulation from clothing.", true),
-    BinaryConfig("uncool_chester", "Ther. Stone Snow Chester Nerf",
-        "Snow Chester will no longer freeze Thermal Stones.", true),
+    BinaryConfig("watering_thermal", "Watering Can Temperature",
+        "Watering Cans don't reduce temperature, removing its exploit with Thermal Stones.", true),
 
     SkipSpace(),
     -----------------------------
@@ -663,7 +665,6 @@ configuration_options = {
     SkipSpace(),
 
     Header("General Food Tweaks"),
-    BinaryConfig("beebox_nerf", "Bee Box Nerf", "Bee Boxes only release 2 Bees max.", true),
     BinaryConfig("butterflywings_nerf", "Butterfly Wings Nerf",
         "Butterfly Wings have been nerfed to not be cheap healing.", true),
     {
@@ -676,6 +677,7 @@ configuration_options = {
             { description = "3x", data = 3 } },
         default = 1.5
     },
+    BinaryConfig("beebox_nerf", "Honey Nerf", "Bee Boxes can only hold 2 Bees and 3 Honey at max. Bee Boxes deal damage to unprepared players. Honey stats nerfed.", true),
     BinaryConfig("seeds", "Lowered Seeds Hunger", "Seeds have had their hunger lowered.", true),
     {
         name = "monster_eggs",
@@ -693,9 +695,7 @@ configuration_options = {
     BinaryConfig("horriblefood", "More Horrible Foods",
         "More items are considered as the horrible food type.", true),
     BinaryConfig("mushroom_changes", "Mushroom Changes",
-        "Mushroom Planter accepts more resources to replenish. Mushrooms and Mushtrees now give spores, instead of caps.", true),
-    BinaryConfig("no_winter_growing", "No Winter Growing",
-        "Makes a few food sources such as Kelp and Stone Fruit not grow in Winter.", true),
+        "Mushroom Planter accepts more resources to replenish. Mushrooms now give spores, instead of caps. Mushtrees will give spores when off-season.", true),
     BinaryConfig("rawcropsnerf", "Raw Crops Nerf",
         "Farm crops are nerfed in their base value when raw/cooked to incentivize using Crockpot recipes.", true),
 
@@ -719,8 +719,6 @@ configuration_options = {
     SkipSpace(),
 
     Header("Wave Changes"),
-    BinaryConfig("lategamehoundspread", "Decreased Lategame Frequency",
-        "Enabling this decreases the frequency in the lategame so Hounds are still a threat, but not annoying.", true),
 
     --[[ This section has overlap with a vanilla update.
 	BinaryConfig("vargwaves", "Vargs in Hound Waves", "In the lategame, vargs will accompany hounds in houndwaves.", true),
@@ -800,15 +798,11 @@ configuration_options = {
     SkipSpace(),
 
     Header("Misc Monsters"),
-    BinaryConfig("noauradamage_butterfly", "AoE Immune Butterflies",
-        "Butterflies are immune to AoE damage, such as catapults and Abigail.", true),
-    BinaryConfig("_bushcrabs", "Bush Crabs", "Bush Crabs ambush the player when digging up berry bushes.", true),
+    BinaryConfig("_bushcrabs", "Bush Crabs", "Bush Crabs ambush the player when digging up berry bushes.", false),
     BinaryConfig("harder_krampus", "Harder Krampus", "Krampii now have a new attack, with knockback.", true),
     BinaryConfig("kramped_buff", "No Naughtiness Decay", "Prevents naughtiness decay.", true),
     BinaryConfig("pigking_guards", "Pig King Guards",
         "Pig King now has neutral guards watching for any suspicious activity.", true),
-    BinaryConfig("pinelings", "Pinelings",
-        "Stumps will become pinelings if awoken by a treeguard, or if stumps are left for long enough.", true),
     BinaryConfig("desertscorpions", "Scorpions",
         "Scorpions plague the Oasis Desert during Dusk and Night. They will spawn from Scorpion Holes spread around the biome.",
         true),
@@ -1345,8 +1339,14 @@ configuration_options = {
     -----------------------------
     Header("> Legacy Options <"),
     -----------------------------
+    BinaryConfig("durability", "Clothing Degradation",
+        "Winter and Rain protection clothing items become less effective when their durability drops.", false),
+    BinaryConfig("pinelings", "Pinelings",
+        "Stumps will become pinelings if awoken by a treeguard, or if stumps are left for long enough.", false),
     BinaryConfig("hangyperds", "Starving Gobblers",
         "Gobblers are now more agressive and will attempt to take berries out of the player's inventory.", false),
+    BinaryConfig("uncool_chester_", "Ther. Stone Snow Chester Nerf",
+        "Snow Chester will no longer freeze Thermal Stones.", false),
     BinaryConfig("woodie_wet_goose", "Weregoose Wetness", "Weregoose gains wetness when over water.", false),
     BinaryConfig("cave_clops", "[BROKEN] Cave Deerclops",
         "During winter, Deerclops can break through the cave ceiling to reach you.", false),
@@ -1401,6 +1401,7 @@ configuration_options = {
     -- Mara =)
 
     --	Header("General"),
+    BinaryConfig("all_must_be_gathered", "All must be gathered", "Before you can proceed...", true),
     BinaryConfig("um_shrink", "Don't Shrink", "Shrink when losing Health / Hunger, become flat when insane.", false),
     BinaryConfig("um_advertisements", "Fun Mode", "Enables FUN new messages for an enhanced experience!", false),
     BinaryConfig("maraboss_bottomtext", "JUDGEMENT", "Enables a particular lunar mutation. Yup!", false),

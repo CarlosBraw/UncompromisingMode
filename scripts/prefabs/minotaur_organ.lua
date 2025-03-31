@@ -11,7 +11,7 @@ end
 
 local function OnKilled(inst)
 	inst.AnimState:PlayAnimation("death")
-	TellMinotaurImDead(inst)
+	inst:ListenForEvent("animover",TellMinotaurImDead)
 end
 
 local function AnimNext(inst)
@@ -101,9 +101,7 @@ local function organfn()
     inst.AnimState:PlayAnimation("enter",false)
 	inst.AnimState:PushAnimation("beat",false)
 	
-	inst:AddTag("nightmarecreature")
-	inst:AddTag("shadow")
-	inst:AddTag("shadow_aligned")
+
 	inst:AddTag("minotaur_organ")
 	inst:AddTag("monster") --We want it to be easy to hit this thing.
 	

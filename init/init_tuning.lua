@@ -32,6 +32,7 @@ TUNING.DSTU = {
     -- Armor
     ----------------------------------------------------------------------------
     ARMORREED_UM = TUNING.WILSON_HEALTH * 2 * multiplayer_armor_durability_modifier,
+	BEE_ALLERGY_PROTECTION_EXTRADAMAGE = 5,	
     ----------------------------------------------------------------------------
     -- Acid colour
     ----------------------------------------------------------------------------
@@ -164,7 +165,6 @@ TUNING.DSTU = {
     VARGWAVES = false,           -- GetModConfigData("vargwaves"),
     VARGWAVES_BOSS_GRACE = 15,   -- GetModConfigData("vargwaves grace"),
     VARGWAVES_DELAY_PERIOD = 15, -- GetModConfigData("vargwaves delay"),
-    LATEGAMEHOUNDSPREAD = GetModConfigData("lategamehoundspread"),
     -- Worm inclusion
     DEPTHSEELS = GetModConfigData("depthseels"),
     DEPTHSVIPERS = GetModConfigData("depthsvipers"),
@@ -244,7 +244,8 @@ TUNING.DSTU = {
     -- Wickerbottom
     WICKERNERF = GetModConfigData("wickerbottom"),
     WICKERNERF_TENTACLES = GetModConfigData("on tentacles"),
-
+	-- Wortox
+	WORTOXCHANGES = GetModConfigData("wortox"),
     -- Willow
     --WILLOW_INSULATION = GetModConfigData("willow insulation"),
 
@@ -257,7 +258,7 @@ TUNING.DSTU = {
     -- Wanda
     WANDA_NERF = GetModConfigData("wanda_nerf"),
     -- Wortox
-    WORTOX = GetModConfigData("wortox"),
+    -- WORTOX = GetModConfigData("wortox"),
     -- Mobs
     RAIDRAT_HEALTH = 100,
     RAIDRAT_DAMAGE = 20,
@@ -317,6 +318,8 @@ TUNING.DSTU = {
     PINK_VOMIT_NUTRIENTS = { 24, 0, 0 },
     PALE_VOMIT_NUTRIENTS = { 8, 8, 8 },
     MUSHROOM_CHANGES = GetModConfigData("mushroom_changes"),
+	ALL_MUST_BE_GATHERED = GetModConfigData("all_must_be_gathered"),
+	WATERING_TEMPERATURE = GetModConfigData("watering_thermal"),
 
     ----------------------------------------------------------------------------
     -- Dynamic Boss Resistance
@@ -345,14 +348,13 @@ TUNING.DSTU = {
     ANNOUNCE_BASESTATUS = GetModConfigData("announce_basestatus"),
     EYEBRELLAREWORK = GetModConfigData("eyebrellarework"),
     -- More Config
-    UPDATE_CHECK = CurrentRelease.GreaterOrEqualTo("R34_OCEANQOL_WINONAWURT"), -- REMEMBER TO ALWAYS UPDATE THIS WITH NEW BETAS.
+    UPDATE_CHECK = CurrentRelease.GreaterOrEqualTo("R36_ST_WENDWALTWORT"), -- REMEMBER TO ALWAYS UPDATE THIS WITH NEW BETAS.
     POCKET_POWERTRIP = GetModConfigData("pocket_powertrip_"),
     WINTER_BURNING = GetModConfigData("winter_burning"),
-    HUNGRY_VOID = GetModConfigData("hungry_void"),
     BUTTERFLYWINGS_NERF = GetModConfigData("butterflywings_nerf"),
     LONGPIG = GetModConfigData("longpig"),
     RAW_CROPS_NERF = GetModConfigData("rawcropsnerf"),
-    WENDY_NERF = GetModConfigData("wendy"),
+    WENDY = GetModConfigData("wendy"),
     TOADS = GetModConfigData("toads"),
     MONSTER_EGGS = GetModConfigData("monster_eggs"),
     IMPASSBLES = GetModConfigData("passibleimpassibles"),
@@ -362,7 +364,7 @@ TUNING.DSTU = {
     HUNGRYFROGS = GetModConfigData("hungryfrogs"),
     COWARDFROGS = GetModConfigData("cowardfrogs"),
     INSUL_THERMALSTONE = GetModConfigData("insul_thermalstone"),
-    UNCOOL_CHESTER = GetModConfigData("uncool_chester"),
+    UNCOOL_CHESTER = GetModConfigData("uncool_chester_"),
     HOODEDFOREST = GetModConfigData("hoodedforest"),
     GHOSTWALRUS = GetModConfigData("ghostwalrus"),
     RICE = GetModConfigData("rice"),
@@ -385,6 +387,7 @@ TUNING.DSTU = {
     COMPROMISING_SHADOWVORTEX = GetModConfigData("compromising_vortex"),
     DISABLE_MEGAFLARE = GetModConfigData("disable_megaflare"),
     WIXIE = GetModConfigData("wixie_walter"),
+    WOBYHUNGER_CLASSIC = GetModConfigData("woby_hunger_classic"),
     WIXIE_BIRDS = GetModConfigData("wixie_birds"),
     MONSTERSMALLMEAT = GetModConfigData("monstersmallmeat"),
     THE_COOLER_SACRED_CHEST = GetModConfigData("the_cooler_sacred_chest"),
@@ -533,8 +536,8 @@ TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE = TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE * 2
 TUNING.CANNONBALLS.ROCK.SPEED = TUNING.CANNONBALLS.ROCK.SPEED * 1.25
 TUNING.CANNONBALLS.ROCK.GRAVITY = TUNING.CANNONBALLS.ROCK.GRAVITY * 1.25
 
-TUNING.CANNONBALL_RADIUS = TUNING.CANNONBALL_RADIUS * 1.25
-TUNING.CANNONBALL_SPLASH_RADIUS = TUNING.CANNONBALL_SPLASH_RADIUS * 1.33
+--TUNING.CANNONBALL_RADIUS = TUNING.CANNONBALL_RADIUS * 1.25
+--TUNING.CANNONBALL_SPLASH_RADIUS = TUNING.CANNONBALL_SPLASH_RADIUS * 1.33
 TUNING.CANNONBALL_SPLASH_DAMAGE_PERCENT = 1
 
 -- sea weed changes
@@ -556,10 +559,10 @@ TUNING.BOAT.BOAT_MAGNET.MAGNET_FORCE = TUNING.BOAT.BOAT_MAGNET.MAGNET_FORCE * 2
 -- TUNING.CRABKING_REGEN_BUFF = TUNING.CRABKING_REGEN * 0.33
 
 -- Wortox
-if GetModConfigData("wortox") then
-    TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL = 5
-    TUNING.WORTOX_MAPHOP_DISTANCE_SCALER = TUNING.WORTOX_MAPHOP_DISTANCE_SCALER * 1.5 -- 50%
-end
+--if GetModConfigData("wortox") then
+    --TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL = 5
+    --TUNING.WORTOX_MAPHOP_DISTANCE_SCALER = TUNING.WORTOX_MAPHOP_DISTANCE_SCALER * 1.5 -- 50%
+--end
 
 if GetModConfigData("heatwaves") then
     TUNING.WILDFIRE_CHANCE = TUNING.WILDFIRE_CHANCE * 10 --testing, fuck it why not?!
@@ -630,3 +633,4 @@ if GetModConfigData("waxwell_nerf") then
 end
 
 TUNING.COMPASS_FUEL = total_day_time * 5
+TUNING.FISHINGROD_USES = TUNING.FISHINGROD_USES + 1  --this is gonna cause a merge conflict later. Too bad!

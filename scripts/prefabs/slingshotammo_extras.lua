@@ -5,7 +5,7 @@ local assets_firecrackers = { Asset("ANIM", "anim/firecrackers.zip") }
 local prefabs_firecrackers = { "explode_firecrackers" }
 
 local AURA_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "abigail", "companion", "ghost", "shadow", "shadowminion", "noauradamage", "INLIMBO", "notarget", "noattack", "invisible" }
-local GOOP_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "shadow", "shadowminion", "INLIMBO", "notarget", "noattack", "invisible" }
+local GOOP_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "shadow", "shadowminion", "INLIMBO", "notarget", "noattack", "invisible", "webbedcreature", "bee" }
 
 if not TheNet:GetPVPEnabled() then
     table.insert(AURA_EXCLUDE_TAGS, "player")
@@ -310,7 +310,7 @@ local function fn()
     inst.attacker = nil
 
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_PELLET
 
     inst:AddComponent("inventoryitem")
 
@@ -669,7 +669,7 @@ local function OnHit_Goop(inst, attacker, target)
         local playerdetected = false
         local goop = SpawnPrefab("slingshotammo_goop_proj_secondary")
 
-        local players = TheSim:FindEntities(x, y, z, 10, { "_combat" }, { "noclaustrophobia", "playerghost" }, { "companion", "player" })
+        local players = TheSim:FindEntities(x, y, z, 10, { "_combat" }, { "noclaustrophobia", "playerghost", "webbedcreature", "bee" }, { "companion", "player" })
         local ents = TheSim:FindEntities(x, y, z, 10, { "_combat" }, GOOP_EXCLUDE_TAGS)
 
         for i, v in pairs(players) do
@@ -741,8 +741,10 @@ local function OnHit_Slime(inst, attacker, target)
                 hitfx.entity:AddFollower():FollowSymbol(target.GUID, target.components.combat.hiteffectsymbol, 0, 0, 0)
             elseif target:HasTag("smallcreature") then
                 hitfx.Transform:SetPosition(0, .5, 0)
+			elseif target:HasTag("epic") then
+				hitfx.Transform:SetPosition(0, 2.5, 0)
             else
-                hitfx.Transform:SetPosition(0, 2, 0)
+                hitfx.Transform:SetPosition(0, 1.5, 0)
             end
 
             hitfx.target = target
@@ -1481,6 +1483,7 @@ local function fncommon(symbol, inv, overridebuild, special)
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
+    MakeInventoryFloatable(inst, "small", .2, { .85, .9, .85 })
 
     inst.AnimState:SetRayTestOnBB(true)
     inst.AnimState:SetBank("slingshotammo")
@@ -1494,7 +1497,6 @@ local function fncommon(symbol, inv, overridebuild, special)
 		inst:AddTag("wixieammo_basic")
 	end
 	
-    inst:AddTag("molebait")
     inst:AddTag("slingshotammo")
     inst:AddTag("reloaditem_ammo")
 
@@ -1512,20 +1514,14 @@ local function fncommon(symbol, inv, overridebuild, special)
 
     inst:AddComponent("tradable")
 
-    inst:AddComponent("edible")
-    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
-    inst.components.edible.hungervalue = 0
-
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_TINYITEM
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_PELLET
 
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/" .. inv .. ".xml"
-    inst.components.inventoryitem:SetSinks(true)
 
-    inst:AddComponent("bait")
     MakeHauntableLaunch(inst)
 
     return inst
@@ -1537,7 +1533,14 @@ local function cracker_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.edible.healthvalue = -10
+    inst.components.inventoryitem:SetSinks(true)
 
+    inst:AddComponent("bait")
     return inst
 end
 
@@ -1550,9 +1553,9 @@ local function honey_fn()
 
     inst:AddComponent("edible")
     inst.components.edible.foodtype = FOODTYPE.GOODIES
-    inst.components.edible.hungervalue = 0
-    inst.components.edible.sanityvalue = 1
-    inst.components.edible.healthvalue = 1
+    inst.components.edible.hungervalue = 0.5 --Adjusted to account for skill tree's extra ammo per craft AND UM's stats for Honey * 3. -CB
+    inst.components.edible.sanityvalue = 0.65
+    inst.components.edible.healthvalue = 0.2
 
     return inst
 end
@@ -1573,6 +1576,7 @@ local function tremor_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
     return inst
 end
@@ -1583,7 +1587,12 @@ local function moonrock_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.edible.sanityvalue = 1
     return inst
 end
 
@@ -1593,6 +1602,7 @@ local function moonglass_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
     return inst
 end
@@ -1603,7 +1613,16 @@ local function salt_fn()
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+	
+    inst:AddComponent("fuel")
+    inst.components.fuel.fuelvalue = TUNING.MED_FUEL / 7.5 --Fuels Salt Shaker 3000 by the same amount as 1 Salt Crystal. -CB
+    inst.components.fuel.fueltype = FUELTYPE.SALT
+	
+    inst:AddComponent("bait")
     return inst
 end
 
@@ -1613,7 +1632,14 @@ local function goop_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.GENERIC
+    inst.components.edible.hungervalue = 0.94 --Glommer Goop divided by 10 -CB
+    inst.components.edible.sanityvalue = -5
+    inst.components.edible.healthvalue = 4
 
+    inst:AddComponent("fuel")
+    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL / 10
     return inst
 end
 
@@ -1633,7 +1659,13 @@ local function lazy_fn()
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.inventoryitem:SetSinks(true)
+	
+    inst:AddComponent("bait")
     return inst
 end
 
@@ -1643,7 +1675,15 @@ local function shadow_fn()
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("waterproofer") --Does not get wet, like Nightmare Fuel! -CB
+    inst:AddComponent("waterproofer")
+    inst.components.waterproofer:SetEffectiveness(0)
+    inst:AddComponent("fuel")
+    inst.components.fuel.fueltype = FUELTYPE.NIGHTMARE
+    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL / 15
+    inst:AddComponent("repairer")
+    inst.components.repairer.repairmaterial = MATERIALS.NIGHTMARE
+    inst.components.repairer.finiteusesrepairvalue = TUNING.NIGHTMAREFUEL_FINITEUSESREPAIRVALUE / 15
     return inst
 end
 
@@ -2086,11 +2126,96 @@ local function crackerexplosion_fn()
     return inst
 end
 
+local function Shock_Rebound(inst, attacker, target)
+    if target ~= nil then
+        local set_attacker = attacker ~= nil and attacker or inst
+
+        ImpactFx(inst, attacker, target)
+
+        if not target:HasTag("wall") and not target:HasTag("structure") and target.components.health ~= nil and not target.components.health:IsDead() then
+            if no_aggro(set_attacker, target) then
+                target.components.combat:SetShouldAvoidAggro(attacker)
+            end
+
+            if target.components.combat ~= nil then
+				target.components.combat:GetAttacked(inst, 20, inst, "electric")
+            end
+
+            if target.components.sleeper ~= nil and target.components.sleeper:IsAsleep() then
+                target.components.sleeper:WakeUp()
+            end
+
+            if target.components.combat ~= nil then
+                target.components.combat:SetTarget(set_attacker)
+                target.components.combat:RemoveShouldAvoidAggro(attacker)
+            end
+				
+			if target.components.health ~= nil and target.components.health:IsDead() then
+				attacker:PushEvent("killed", { victim = target, attacker = attacker })
+			end
+
+			if not (
+				target:HasTag("electricdamageimmune") or
+				(target.components.inventory ~= nil and target.components.inventory:IsInsulated())
+			) and
+				target:GetIsWet()
+			then
+				SpawnPrefab("electrichitsparks"):AlignToTarget(target, inst, true)
+			end
+	   end
+    end
+
+    inst:Remove()
+end
+
+local function shockscrap_rebound()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst)
+    inst.AnimState:SetBank("bishop_attack")
+    inst.AnimState:SetBuild("bishop_attack")
+    inst.AnimState:PlayAnimation("idle")
+
+    -- weapon (from weapon component) added to pristine state for optimization
+    inst:AddTag("weapon")
+
+    -- projectile (from projectile component) added to pristine state for optimization
+    inst:AddTag("projectile")
+
+    RemovePhysicsColliders(inst)
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("weapon")
+
+    inst:AddComponent("projectile")
+    inst.components.projectile:SetSpeed(13)
+    inst.components.projectile:SetOnHitFn(Shock_Rebound)
+	
+    inst.impactfx = "bishop_charge_hit"
+
+    inst.persists = false
+    inst:DoTaskInTime(2, inst.Remove)
+
+    MakeHauntableLaunch(inst)
+
+    return inst
+end
+
 return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_firecrackers_proj_secondary", crackerproj_fn, assets, prefabs),
     Prefab("firecrackers_slingshot", fn, assets_firecrackers, prefabs_firecrackers),
     Prefab("slingshot_explode_firecrackers", crackerexplosion_fn, assets, prefabs),
-    Prefab("slingshotammo_honey", honey_fn, assets, prefabs),
+    Prefab(TUNING.DSTU ~= nil and TUNING.DSTU.WIXIE ~= nil and TUNING.DSTU.WIXIE and "slingshotammo_honey" or "slingshotammo_honey_null", honey_fn, assets, prefabs),
     Prefab("slingshotammo_honey_proj_secondary", honeyproj_fn, assets, prefabs),
     Prefab("slingshotammo_honey_impact", impacthoneyfn, assets, prefabs),
     Prefab("slingshotammo_goldshatter", impactgoldfn, assets, prefabs),
@@ -2105,7 +2230,7 @@ return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock", moonrock_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock_proj_secondary", moonrockproj_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock_impact", impactmoonrockfn, assets, prefabs),
-    Prefab("slingshotammo_moonglass", moonglass_fn, assets, prefabs),
+    Prefab(TUNING.DSTU ~= nil and TUNING.DSTU.WIXIE ~= nil and TUNING.DSTU.WIXIE and "slingshotammo_moonglass" or "slingshotammo_moonglass_null", moonglass_fn, assets, prefabs),
     Prefab("slingshotammo_moonglass_proj_secondary", moonglassproj_fn, assets, prefabs),
     Prefab("slingshotammo_salt", salt_fn, assets, prefabs),
     Prefab("slingshotammo_salt_proj_secondary", saltproj_fn, assets, prefabs),
@@ -2121,4 +2246,5 @@ return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_lazy_impact", impactlazyfn, assets, prefabs),
     Prefab("slingshotammo_shadow", shadow_fn, assets, prefabs),
     Prefab("slingshotammo_shadow_proj_secondary", shadowproj_fn, assets, prefabs),
-    Prefab("wixie_shadowclone", shadowclone_fn, assets, prefabs)
+    Prefab("wixie_shadowclone", shadowclone_fn, assets, prefabs),
+	Prefab("slingshotammo_scrapfeather_rebound", shockscrap_rebound)

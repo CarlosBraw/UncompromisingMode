@@ -3,8 +3,8 @@ GLOBAL.setfenv(1, GLOBAL)
 
 local toolbox_items = {
     "sewing_tape",
-    "winona_machineparts_1",
-    "winona_machineparts_2",
+    --"winona_machineparts_1",
+    --"winona_machineparts_2", --can't go in containers anyways.
     "winona_recipescanner",
     "winona_telebrella",
     "inspectacleshat",
@@ -16,7 +16,8 @@ local toolbox_items = {
     "nitre",
     "alterguardianhatshard",
     "purebrilliance",
-    "sewing_tape"
+    "sewing_tape",
+    "winona_storage_robot"
 }
 
 

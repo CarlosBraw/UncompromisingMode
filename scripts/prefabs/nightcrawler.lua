@@ -76,7 +76,8 @@ local function fn()
 	inst:AddTag("shadow")
     inst:AddTag("shadow_aligned")
 	inst:AddTag("notraptrigger")
-	
+	inst.HostileToPlayerTest = function() return true end
+		
 	inst.entity:SetPristine()
 	
 	if not TheWorld.ismastersim then

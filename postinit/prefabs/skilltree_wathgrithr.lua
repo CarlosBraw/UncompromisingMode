@@ -147,7 +147,6 @@ local ONACTIVATE_FNS = {
 
     AllegianceShadow = function(inst)
         inst:AddTag("player_shadow_aligned")
-        --inst:AddTag("battlesongshadowalignedmaker")
 
         --[[
         if inst.components.damagetyperesist ~= nil then
@@ -185,7 +184,6 @@ local ONACTIVATE_FNS = {
     AllegianceLunar = function(inst)
         inst:AddTag("player_lunar_aligned")
         inst:AddTag("lunar_improved_songs")
-        --inst:AddTag("battlesonglunaralignedmaker")
 
         --[[
         if inst.components.damagetyperesist ~= nil then
@@ -240,7 +238,6 @@ local ONDEACTIVATE_FNS = {
 
     AllegianceShadow = function(inst)
         inst:RemoveTag("player_shadow_aligned")
-        --inst:RemoveTag("battlesongshadowalignedmaker")
 
         --[[
         if inst.components.damagetyperesist ~= nil then
@@ -278,7 +275,6 @@ local ONDEACTIVATE_FNS = {
     AllegianceLunar = function(inst)
         inst:RemoveTag("player_lunar_aligned")
         inst:RemoveTag("lunar_improved_songs")
-        --inst:RemoveTag("battlesonglunaralignedmaker")
 
         --[[
         if inst.components.damagetyperesist ~= nil then
@@ -359,9 +355,6 @@ local skills =
 
             --"wathgrithr_arsenal_shield_1",
         },
-
-        onactivate   = CreateAddTagFn("spearwathgrithrlightningmaker"),
-        ondeactivate = CreateRemoveTagFn("spearwathgrithrlightningmaker"),
     },
 
     -- The Lightning Spear can now perform a special attack.\nThis attack repairs Charged Lightning Spears if it hits a target.
@@ -378,8 +371,8 @@ local skills =
         group        = "arsenal",
         tags         = { "spear" },
 
-        onactivate   = CreateAddTagFn(UPGRADETYPES.SPEAR_LIGHTNING .. "_upgradeuser"),
-        ondeactivate = CreateRemoveTagFn(UPGRADETYPES.SPEAR_LIGHTNING .. "_upgradeuser"),
+        onactivate   = CreateAddTagFn(UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser"),
+        ondeactivate = CreateRemoveTagFn(UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser"),
     },
 
     --------------------------------------------------------------------------
@@ -416,12 +409,7 @@ local skills =
         connects     = {
             "wathgrithr_arsenal_helmet_4",
             "wathgrithr_arsenal_helmet_5",
-
-            --"wathgrithr_arsenal_shield_1",
         },
-
-        onactivate   = CreateAddTagFn("wathgrithrimprovedhatmaker"),
-        ondeactivate = CreateRemoveTagFn("wathgrithrimprovedhatmaker"),
     },
 
     -- The Commander's Helm now has protection against planar damage.
@@ -455,8 +443,8 @@ local skills =
             "wathgrithr_arsenal_shield_3",
         },
 
-        onactivate   = CreateAddTagFn("wathgrithrshieldmaker"),
-        ondeactivate = CreateRemoveTagFn("wathgrithrshieldmaker"),
+        onactivate   = CreateAddTagFn("wathgrithrshielduser"),
+        ondeactivate = CreateRemoveTagFn("wathgrithrshielduser"),
     },
 
     -- The duration of the Battle Rönd's ability to block attacks will be increased.
@@ -497,9 +485,6 @@ local skills =
     wathgrithr_beefalo_saddle = {
         group        = "beefalo",
         tags         = { "saddle" },
-
-        onactivate   = CreateAddTagFn("saddlewathgrithrmaker"),
-        ondeactivate = CreateRemoveTagFn("saddlewathgrithrmaker"),
 
         connects     = { "wathgrithr_beefalo_3" },
     },
@@ -568,8 +553,8 @@ local skills =
         group        = "songs",
         --root = true,
 
-        onactivate   = CreateAddTagFn("battlesongcontainermaker"),
-        ondeactivate = CreateRemoveTagFn("battlesongcontainermaker"),
+        onactivate   = CreateAddTagFn("battlesongcontaineruser"),
+        ondeactivate = CreateRemoveTagFn("battlesongcontaineruser"),
     },
 
     --[[
@@ -598,9 +583,6 @@ local skills =
     -- Learn to craft the Warrior's Reprise: Bring your allies back to life so they can fight for Valhalla.
     wathgrithr_songs_revivewarrior      = {
         group        = "songs",
-
-        onactivate   = CreateAddTagFn("battlesonginstantrevivemaker"),
-        ondeactivate = CreateRemoveTagFn("battlesonginstantrevivemaker"),
     },
 
     --------------------------------------------------------------------------

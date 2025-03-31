@@ -49,7 +49,6 @@ modimport("init/init_tooltips")
 modimport("init/init_actions")
 modimport("init/init_containers")
 modimport("init/init_batterypower")
-modimport("init/init_sweaterpower")
 modimport("init/init_rpctrackers")
 modimport("init/init_creatures/init_ediblebugs")
 modimport("init/init_creatures/init_bear_trap_immune")
@@ -141,8 +140,6 @@ modimport("init/init_character_changes/willow")
 
 modimport("init/init_character_changes/willow_bernie")
 
-modimport("init/init_character_changes/waxwell")
-
 --if GetModConfigData("warly") then
 --modimport("init/init_character_changes/warly")
 --end
@@ -201,12 +198,10 @@ modimport("init/init_character_changes/wathgrithr")
 modimport("init/init_character_changes/webber")
 modimport("init/init_character_changes/winona")
 modimport("init/init_character_changes/wanda")
-
-if GetModConfigData("wortox") then
-    modimport("init/init_character_changes/wortox")
-end
-
+modimport("init/init_character_changes/wortox")
 modimport("init/init_character_changes/warly")
+modimport("init/init_character_changes/waxwell")
+modimport("init/lagcomp_warning")
 
 if GetModConfigData("hardcore") then
     modimport("init/init_gamemodes/init_hardcore")

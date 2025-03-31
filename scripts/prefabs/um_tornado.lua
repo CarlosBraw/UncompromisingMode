@@ -144,28 +144,30 @@ local function TornadoEnviromentTask(inst)
     if config ~= "minimal" then
         -- if GetClosestInstWithTag("player", inst, PLAYER_CAMERA_SEE_DISTANCE * 1.125) ~= nil then -- tornado doesn't sleep. Using alt distance-based check.
         -- PICKABLES
-        local pickables = TheSim:FindEntities(x, y, z, 12, nil, {"prototyper", "INLIMBO", "trap", "flower","heavy",  "tornado_nosucky" }, { "pickable", "HACK_workable" })
+        local pickables = TheSim:FindEntities(x, y, z, 12, nil, { "prototyper", "INLIMBO", "trap", "flower", "heavy", "tornado_nosucky" }, { "pickable", "HACK_workable" })
         for k, v in ipairs(pickables) do
-            local _x, _y, _z = v.Transform:GetWorldPosition()
-            if v.components.pickable ~= nil and v.components.pickable:CanBePicked() and not IsUnderRainDomeAtXZ(_x, _z) then
-                if not v:IsAsleep() and not config == "reduced" then
-                    v.components.pickable:Pick(TheWorld)
-                else
-                    if v:IsAsleep() and config == "reduced" then
-                        return
-                    end
+            if v.prefab ~= "sculptingtable" then
+                local _x, _y, _z = v.Transform:GetWorldPosition()
+                if v.components.pickable ~= nil and v.components.pickable:CanBePicked() and not IsUnderRainDomeAtXZ(_x, _z) then
+                    if not v:IsAsleep() and not config == "reduced" then
+                        v.components.pickable:Pick(TheWorld)
+                    else
+                        if v:IsAsleep() and config == "reduced" then
+                            return
+                        end
 
-                    v.components.pickable:Pick(inst)
-                end
-            elseif v.components.hackable and v.components.hackable:CanBeHacked() then
-                if not v:IsAsleep() and not config == "reduced" then
-                    v.components.hackable:Hack(TheWorld, 1)
-                else
-                    if v:IsAsleep() and config == "reduced" then
-                        return
+                        v.components.pickable:Pick(inst)
                     end
+                elseif v.components.hackable and v.components.hackable:CanBeHacked() then
+                    if not v:IsAsleep() and not config == "reduced" then
+                        v.components.hackable:Hack(TheWorld, 1)
+                    else
+                        if v:IsAsleep() and config == "reduced" then
+                            return
+                        end
 
-                    v.components.hackable:Hack(inst, 1)
+                        v.components.hackable:Hack(inst, 1)
+                    end
                 end
             end
         end
@@ -198,16 +200,23 @@ local function TornadoEnviromentTask(inst)
         local items_pick = TheSim:FindEntities(x, y, z, 6, { "_inventoryitem" }, --no dome check because dome component adds nosucky tag.
             { "irreplaceable", "tornado_nosucky", "trap", "INLIMBO", "heavy", "backpack" })
         for k, v in ipairs(items_pick) do
-            if v.components.inventoryitem ~= nil and v.prefab ~= "bullkelp_beachedroot" then
-                if config == "reduced" and v:IsAsleep() then
-                    return
-                end
-                if table.contains(destroy_prefabs, v.prefab) and math.random() > 0.5 then
-                    v:Remove()
-                else
-                    PickItem(v, inst)
-                end
-            end
+			if v.prefab == "staff_tornado" then
+				if not v.empowered then
+					v.ChargeUp(v)
+					SpawnPrefab("lightning").Transform:SetPosition(v.Transform:GetWorldPosition())
+				end
+			else
+				if v.components.inventoryitem ~= nil and v.prefab ~= "bullkelp_beachedroot" then
+					if config == "reduced" and v:IsAsleep() then
+						return
+					end
+					if table.contains(destroy_prefabs, v.prefab) and math.random() > 0.5 then
+						v:Remove()
+                    elseif v.components.inventoryitem.canbepickedup then
+						PickItem(v, inst)
+					end
+				end
+			end
         end
     end
 

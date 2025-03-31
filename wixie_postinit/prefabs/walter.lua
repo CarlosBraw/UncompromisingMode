@@ -156,6 +156,7 @@ env.AddPrefabPostInit("walter", function(inst)
 		inst.components.builder:UnlockRecipe("healingsalve")
 		inst.components.builder:UnlockRecipe("bandage")
 		inst.components.builder:UnlockRecipe("floral_bandage")
+		inst.components.builder:UnlockRecipe("um_rimeweed_icepack")
 		inst.components.builder:UnlockRecipe("tillweedsalve")
 		inst.components.builder:UnlockRecipe("rope")
 		inst.components.builder:UnlockRecipe("papyrus")
@@ -167,4 +168,54 @@ env.AddPrefabPostInit("walter", function(inst)
 	end
 	
 	--inst:ListenForEvent("killed", OnKilledOther)
+end)
+
+local function new_bonus_damage_via_allergy(inst, target, damage, weapon)
+	if target.components.inventory ~= nil then
+		local helm = target.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+		if target.components.inventory ~= nil and helm and helm.components.armor and helm.components.armor.tags then
+			for i, tag in ipairs(helm.components.armor.tags) do
+				if tag == "bee" then
+					return (target:HasTag("allergictobees") and TUNING.DSTU.BEE_ALLERGY_PROTECTION_EXTRADAMAGE) or 0
+				else
+					return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+				end	
+			end
+		else 	
+			return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+		end	
+	else
+		return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+	end
+end
+
+env.AddPrefabPostInit("bee", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("killerbee", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("beequeen", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("beeguard", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("bandage_butterflywings", function(inst)	
+    if inst.components.healer ~= nil and inst.components.healer.health ~= nil then
+		local old_health = inst.components.healer.health
+		inst.components.healer:SetHealthAmount(old_health / 3)
+	end
 end)

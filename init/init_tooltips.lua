@@ -77,7 +77,7 @@ STRINGS.UNCOMP_TOOLTIP = {
     ARMOR_CRAB_MAXHP = "- Increases maximum health when worn.",
     ARMOR_CRAB_REGEN = "- Self-healing.",
     UM_ARMOR_PYRE_NETTLES = "- Panics and damages nearby miscreants.\n- Ignores tiny, shadow, or fire-aligned creatures.",
-    WINONA_TOOLBOX = "- Portable storage for tools, dismantled structures and related items.", --putting these here for the icon
+    WINONA_TOOLBOX = "- Portable storage for dismantled structures and all things engineering.",
     WINONA_UPGRADEKIT_ELECTRICAL = "- Upgrades a Miner Hat or Latern to use electricity.\n- Increases max fuel.",
 	CODEX_MANTRA = "- Will spawn Classic Shadows when read.\n- Acts as a Prestihatitator (Tier 1 Magic) when dropped.",
 	PACT_ARMOR_SANITY = "- Creates temporary Night Armor.\n- Disappears when unequipped.",
@@ -140,6 +140,7 @@ STRINGS.PINETREE_TOOLTIP = {
     PORTABLETENT_ITEM = "- A pine tree pioneer knows how to conserve energy when relaxing!",
     MEATRACK_HAT = "- If I go fast enough, it will dry even faster!",
     BRINE_BALM = "- My first aid training helps me get more out of this!",
+	BEEHAT = "- Wearing it should help me deal with my allergy!",
 }
 
 STRINGS.ENGINEERING_TOOLTIP = {
@@ -158,7 +159,8 @@ if TUNING.DSTU.TELESTAFF_REWORK then
 end
 
 if TUNING.DSTU.BEEBOX_NERF then
-    TOOLTIPS.BEEBOX = "- Reduced maximum active Bees."
+    TOOLTIPS.BEEBOX = "- Reduced maximum amount of Bees.\n- Reduced maximun amount of Honey.\n- Will deal damage to unprepared players."
+    TOOLTIPS.BEEHAT = "- Will protect players from Bee Box damage."	
 end
 
 if not TUNING.DSTU.ELECTRICALMISHAP then
@@ -341,22 +343,26 @@ end
 
 if TUNING.DSTU.WXLESS then
     local CircuitDefs = {
-        HEAT = "- Now provides heat when working or attacking.\n- No longer changes max and min temperature.\n- Provides insulation.\n- Increases work efficiency the hotter you are.",
+        HEAT = "- Now provides heat when working or attacking.\n- No longer changes max and min temperature.\n- Provides insulation.\n- Increases work and row efficiency the hotter you are.",
         MOVESPEED = "- Increases run speed over time the longer you run.",
         MOVESPEED2 = "- Increases run speed over time the longer you run.\n- When fast enough, you begin a charge, hitting creatures in your way.",
         BEE = "- Now regenerates 1 health every 5 seconds.",
         LIGHT = "- Increased light radius.",
         MUSIC = "- Provides more sanity.\n- Attracts birds.",
-        MAXHEALTH = "- Provides a bit of static damage reduction.\n- Now increases health by 40.",
-        MAXHEALTH2 = "- Provides static damage reduction.\n- Now increases health by 100.",
-        MAXSANITY = "- Provides a bit more sanity over time.\n- Reduces insanity aura effects.",
-        MAXSANITY1 = "- Provides a bit of sanity over time.\n- Slighly reduces insanity aura effects.",
-        TASER = "- Getting hit stuns the attacker.\n- Gives you charge when you attack enough times.",
+        MAXHEALTH = "- Provides a bit of static damage reduction.\n- Now increases health by 30.",
+        MAXHEALTH2 = "- Provides static damage reduction.\n- Now increases health by 75.",
+        MAXSANITY = "- Provides a bit more sanity over time.\n- Reduces insanity aura effects.\n- Now increases sanity by 75.",
+        MAXSANITY1 = "- Provides a bit of sanity over time.\n- Slighly reduces insanity aura effects.\n- Now increases sanity by 30.",
+        TASER = "- Getting hit stuns the attacker.\n- Gives you charge when you attack a shocked target enough times.",
         COLD = "- Periodically produces ice.\n- No longer changes max and min temperature.\n- Decreases food spoilage rate.\n- Decreased drying threshold\n- Chills you significantly, if idle.",
-        MAXHUNGER = "- Slows down charge drain\n- Reduces negative food effects, up until reversing them entirely.", --WHOEVER AT KLEI WHO DECIDED THEY'D MAKE THE MAXHUNGER1 THE WEAK VERSION AND MAXHUNGER THE STRONG VERSION SHOULD HAVE THEIR FINGERS BOILED.
-        MAXHUNGER1 = "- Slightly slows down hunger drain.",
+        MAXHUNGER = "- Slows down charge drain.\n- Now increases hunger by 75.", --WHOEVER AT KLEI WHO DECIDED THEY'D MAKE THE MAXHUNGER1 THE WEAK VERSION AND MAXHUNGER THE STRONG VERSION SHOULD HAVE THEIR FINGERS BOILED.
+        MAXHUNGER1 = "- Slightly slows down hunger drain.\n- Now increases hunger by 30",
     }
     for k, v in pairs(CircuitDefs) do
         TOOLTIPS["WX78MODULE_" .. k] = v
     end
+end
+
+if GetModConfigData("toolbox_tools") then
+    TOOLTIPS.WINONA_TOOLBOX = "- Portable storage for dismantled structures, tools and all things engineering."
 end
