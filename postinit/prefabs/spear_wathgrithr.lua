@@ -77,9 +77,9 @@ local function Strike(owner)
         fx.entity:AddFollower()
         fx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -145, 0)
         local item = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-        if item ~= nil then
-            item.components.finiteuses:Repair(TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LIGHTNINGREPAIR)
-        end
+        --if item ~= nil then
+            --item.components.finiteuses:Repair(TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LIGHTNINGREPAIR)
+        --end
     end
 end
 
@@ -102,28 +102,28 @@ end
 local function Lightning_OnLungedHit(inst, doer, target)
     inst._lunge_hit_count = inst._lunge_hit_count or 0
 
-    if inst._lunge_hit_count < TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_MAX_HITS and
-        doer.IsValidVictim ~= nil and
-        doer.IsValidVictim(target)
-    then
-        inst.components.finiteuses:Use(TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_ONHIT_USES)
-        inst._lunge_hit_count = inst._lunge_hit_count + 1
-    end
+    --if inst._lunge_hit_count < TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_MAX_HITS and
+        --doer.IsValidVictim ~= nil and
+        --doer.IsValidVictim(target)
+    --then
+        --inst.components.finiteuses:Use(TUNING.DSTU.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_ONHIT_USES)
+        --inst._lunge_hit_count = inst._lunge_hit_count + 1
+    --end
 end
 
 env.AddPrefabPostInit("spear_wathgrithr_lightning", function(inst)
-	inst:AddTag("electricaltool")
-	
+    inst:AddTag("electricaltool")
+
     if not TheWorld.ismastersim then
         return
     end
 
     if env.GetModConfigData("wathgrithr_arsenal") then
-		inst:AddTag("lightningrod")
+        inst:AddTag("lightningrod")
         inst:ListenForEvent("lightningstrike", onlightningground)
-		inst.components.aoeweapon_lunge:SetOnLungedFn(Lightning_OnLunged)
+        inst.components.aoeweapon_lunge:SetOnLungedFn(Lightning_OnLunged)
         inst.components.aoeweapon_lunge:SetOnHitFn(Lightning_OnLungedHit)
-		
+
         if inst.components.equippable ~= nil then
             local OnEquip_old = inst.components.equippable.onequipfn
             inst.components.equippable.onequipfn = function(inst, owner)
@@ -161,14 +161,18 @@ env.AddPrefabPostInit("spear_wathgrithr_lightning", function(inst)
                     OnUnequip_old(inst, owner)
                 end
             end
-        end		
+        end
     end
 end)
 
 -------------------------------------------------------------------------------------------------------
 
+--local GeneratorGroundCharging = require("generatorcharging")
+
 env.AddPrefabPostInit("spear_wathgrithr_lightning_charged", function(inst)
     inst:AddTag("electricaltool")
+
+    --GeneratorGroundCharging(inst) --fueled only.
 
     if not TheWorld.ismastersim then
         return

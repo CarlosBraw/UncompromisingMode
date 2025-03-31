@@ -408,10 +408,10 @@ ANNOUNCE.ANNOUNCE_CHARGE_SUCCESS_ELECTROCUTED = "OW! Not what I had in mind."
 
 DESCRIBE.WINONA_TOOLBOX = "Do I have to carry everything around?"
 ACTIONFAIL.WINONATOOLBOX = "Hey, at least let me take a peak."
-DESCRIBE.WINONA_CATAPULT_ITEM = "Dumb machines!"
-DESCRIBE.WINONA_SPOTLIGHT_ITEM = "Dumb machines!"
-DESCRIBE.WINONA_BATTERY_LOW_ITEM = "Dumb machines!"
-DESCRIBE.WINONA_BATTERY_HIGH_ITEM = "Dumb machines!"
+DESCRIBE.WINONA_CATAPULT_ITEM_UM = "Dumb machines!"
+DESCRIBE.WINONA_SPOTLIGHT_ITEM_UM = "Dumb machines!"
+DESCRIBE.WINONA_BATTERY_LOW_ITEM_UM = "Dumb machines!"
+DESCRIBE.WINONA_BATTERY_HIGH_ITEM_UM = "Dumb machines!"
 DESCRIBE.POWERCELL = "Yeah, yeah, it's nice, but how well does it burn."
 DESCRIBE.WINONA_UPGRADEKIT_ELECTRICAL =
 "Let's hope an electrical fire doesn't break out, right?"
@@ -479,7 +479,7 @@ DESCRIBE.UM_DREAMCATCHER = "Can you catch all my bad dreams?"
 DESCRIBE.UM_BRINEISHMOSS = "Moist and gross."
 DESCRIBE.UM_COALESCED_NIGHTMARE =
 "I don't even want to think about where it came from."
-DESCRIBE.SLUDGE_CORK = "Atleast now I can plug that sludge up!"
+DESCRIBE.SLUDGE_CORK = "At least now I can plug that sludge up!"
 DESCRIBE.SLUDGESTACK = "C'moooon, wouldn't it be fun to watch it combust?"
 DESCRIBE.SPECTER_SHIPWRECK = "It's in the water, but it looks burnable enough."
 

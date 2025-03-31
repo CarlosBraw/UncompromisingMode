@@ -3,10 +3,9 @@ GLOBAL.setfenv(1, GLOBAL)
 -----------------------------------------------------------------
 
 env.AddPrefabPostInit("stinger", function(inst)
-	if not TheWorld.ismastersim then
-		return
-	end
+    if not TheWorld.ismastersim then
+        return
+    end
 
-    inst:AddComponent("selfstacker")
-	inst:AddComponent("fuel")
+    inst:AddComponent("fuel")
 end)

@@ -3,22 +3,11 @@ GLOBAL.setfenv(1, GLOBAL)
 -----------------------------------------------------------------
 
 local function NewCustom(inst, dt)
-	inst.sanitytrail = 0
-	
-	local x, y, z = inst.Transform:GetWorldPosition()
-	local bordomtrails = TheSim:FindEntities(x, y, z, 17, { "bordomtrail" })
-
-	for i, v in ipairs(bordomtrails) do
-		if v.sanitylevel ~= nil and  v.ownerid == inst.userid then
-			inst.sanitytrail = inst.sanitytrail - v.sanitylevel
-		end
-	end
-	
 	local wobystarving = inst.woby ~= nil and inst.woby.wobystarving and -0.1 or 0
 	
 	local rate = inst._OldRate(inst, dt)
 
-    return rate + inst.sanitytrail + wobystarving
+    return rate + wobystarving
 end
 
 local function RightClickPicker(inst, target, pos)
@@ -156,6 +145,8 @@ env.AddPrefabPostInit("walter", function(inst)
 		inst.components.foodaffinity:AddPrefabAffinity("kelp_dried", TUNING.AFFINITY_15_CALORIES_TINY)
 		inst.components.foodaffinity:AddPrefabAffinity("fishmeat_dried", TUNING.AFFINITY_15_CALORIES_MED)
 		inst.components.foodaffinity:AddPrefabAffinity("smallfishmeat_dried", TUNING.AFFINITY_15_CALORIES_SMALL)
+		inst.components.foodaffinity:AddPrefabAffinity("seaweed_dried", TUNING.AFFINITY_15_CALORIES_SMALL)
+		inst.components.foodaffinity:AddPrefabAffinity("jellyjerky", TUNING.AFFINITY_15_CALORIES_MED)
 	end
 	
 	if inst.components.builder ~= nil then
@@ -165,6 +156,7 @@ env.AddPrefabPostInit("walter", function(inst)
 		inst.components.builder:UnlockRecipe("healingsalve")
 		inst.components.builder:UnlockRecipe("bandage")
 		inst.components.builder:UnlockRecipe("floral_bandage")
+		inst.components.builder:UnlockRecipe("um_rimeweed_icepack")
 		inst.components.builder:UnlockRecipe("tillweedsalve")
 		inst.components.builder:UnlockRecipe("rope")
 		inst.components.builder:UnlockRecipe("papyrus")
@@ -175,5 +167,55 @@ env.AddPrefabPostInit("walter", function(inst)
 		inst.components.sanity.custom_rate_fn = NewCustom
 	end
 	
-	inst:ListenForEvent("killed", OnKilledOther)
+	--inst:ListenForEvent("killed", OnKilledOther)
+end)
+
+local function new_bonus_damage_via_allergy(inst, target, damage, weapon)
+	if target.components.inventory ~= nil then
+		local helm = target.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+		if target.components.inventory ~= nil and helm and helm.components.armor and helm.components.armor.tags then
+			for i, tag in ipairs(helm.components.armor.tags) do
+				if tag == "bee" then
+					return (target:HasTag("allergictobees") and TUNING.DSTU.BEE_ALLERGY_PROTECTION_EXTRADAMAGE) or 0
+				else
+					return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+				end	
+			end
+		else 	
+			return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+		end	
+	else
+		return (target:HasTag("allergictobees") and TUNING.BEE_ALLERGY_EXTRADAMAGE) or 0
+	end
+end
+
+env.AddPrefabPostInit("bee", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("killerbee", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("beequeen", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("beeguard", function(inst)	
+    if inst.components.combat ~= nil then	
+		inst.components.combat.bonusdamagefn = new_bonus_damage_via_allergy
+	end
+end)
+
+env.AddPrefabPostInit("bandage_butterflywings", function(inst)	
+    if inst.components.healer ~= nil and inst.components.healer.health ~= nil then
+		local old_health = inst.components.healer.health
+		inst.components.healer:SetHealthAmount(old_health / 3)
+	end
 end)

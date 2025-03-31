@@ -59,7 +59,13 @@ CONSTRUCTION_PLANS["multiplayer_portal_moonrock_constr"] = {
 --while AllRecipes doesn't. Not sure if there's any issues with that.
 
 -- Recipe changes
-AllRecipes["compass"].ingredients = { Ingredient("goldnugget", 4), Ingredient("flint", 2) }
+
+--I HATE FRAZZLED WIRES!!!!!!!!
+AllRecipes["boat_magnet_kit"].ingredients = {Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("wagpunk_bits", 1)}
+AllRecipes["boat_magnet"].ingredients = {Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("wagpunk_bits", 1)}
+AllRecipes["boat_magnet_beacon"].ingredients = {Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("wagpunk_bits", 1)}	
+
+AllRecipes["compass"].ingredients = { Ingredient("goldnugget", 2), Ingredient("flint", 2) }
 
 if GetModConfigData("longpig") then
     AllRecipes["reviver"].ingredients = {
@@ -72,7 +78,7 @@ if GetModConfigData("compostoverrot") then
     -- Rot Related Recipe Changes [AXE]
     AllRecipes["lifeinjector"].ingredients = {
         Ingredient("nitre", 2),
-        Ingredient("red_cap", 6),
+        Ingredient("red_cap", 4),
         Ingredient("stinger", 1),
     }
     AllRecipes["mushroom_farm"].ingredients = {
@@ -104,10 +110,10 @@ end
 
 --woodie stuff
 
-local config_skilltrees = GetModConfigData("woodie_skilltree")
-if config_skilltrees then
-    AllRecipes["walking_stick"].ingredients = { Ingredient("lucy", 0), Ingredient("log", 3), Ingredient("wereitem_goose", 1) }
-end
+--local config_skilltrees = GetModConfigData("woodie_skilltree")
+--if config_skilltrees then
+    --AllRecipes["walking_stick"].ingredients = { Ingredient("lucy", 0), Ingredient("log", 3), Ingredient("wereitem_goose", 1) }
+--end
 
 if GetModConfigData("wanda_nerf") then
     AllRecipes["pocketwatch_revive"].ingredients = {
@@ -279,17 +285,22 @@ if TUNING.DSTU.WOLFGANG_HUNGERMIGHTY then
     }
 end
 
+if GetModConfigData("wathgrithr_rework_") == 1 then
+    AllRecipes["battlesong_shadowaligned"] = nil
+    AllRecipes["battlesong_lunaraligned"] = nil
+end
+
 if GetModConfigData("telestaff_rework") then
     AllRecipes["telebase"].ingredients = {
         Ingredient("nightmarefuel", 4),
         Ingredient("livinglog", 4),
         Ingredient("goldnugget", 8),
-        Ingredient("purplegem", 3)		
+        Ingredient("purplegem", 3)
     }
     --AllRecipes["telestaff"].ingredients = {
-        --Ingredient("nightmarefuel", 2),
-        --Ingredient("spear", 1),
-        --Ingredient("purplegem", 1)
+    --Ingredient("nightmarefuel", 2),
+    --Ingredient("spear", 1),
+    --Ingredient("purplegem", 1)
     --}
     AllRecipes["purpleamulet"].ingredients = {
         Ingredient("goldnugget", 3),
@@ -308,13 +319,6 @@ if GetModConfigData("longpig") then
     )
 end
 
-local winona_portables = { "battery_high", "battery_low", "spotlight", "catapult" }
-if GetModConfigData("winona_portables_") then
-    for k, v in ipairs(winona_portables) do
-        AllRecipes["winona_" .. v].product = "winona_" .. v .. "_item"
-        AllRecipes["winona_" .. v].placer = nil
-    end
-end
 
 AllRecipes["mast_item"].ingredients = { Ingredient("log", 3), Ingredient("rope", 2), Ingredient("silk", 3) }
 AllRecipes["mast"].ingredients = { Ingredient("log", 3), Ingredient("rope", 2), Ingredient("silk", 3) }
@@ -354,7 +358,7 @@ if GetModConfigData("rat_raids") then
         "ratpoisonbottle",
         { Ingredient("red_cap", 2), Ingredient("jammypreserves", 1), Ingredient("rocks", 1) },
         TECH.SCIENCE_ONE,
-        nil,
+        {numtogive=4},
         { "TOOLS" }
     )
     ChangeSortKey("ratpoisonbottle", "trap", "TOOLS", true)
@@ -419,7 +423,7 @@ AddRecipe2(
 ChangeSortKey("sporepack", "icepack", "CLOTHING", true)
 ChangeSortKey("sporepack", "icepack", "CONTAINERS", true)
 
-if GetModConfigData("pocket_powertrip") ~= 0 then
+if GetModConfigData("pocket_powertrip_") then
     AddRecipeToFilter("raincoat", "CONTAINERS")
     ChangeSortKey("raincoat", "sporepack", "CONTAINERS", true)
 
@@ -652,33 +656,35 @@ AddRecipe2(
 )
 ChangeSortKey("floral_bandage", "bandage", "RESTORATION", true)
 
-AddRecipe2(
-    "winona_toolbox",
-    { Ingredient("boards", 2), Ingredient("goldnugget", 4), Ingredient("sewing_tape", 2) },
-    TECH.NONE,
-    { builder_tag = "handyperson" },
-    { "CONTAINERS", "CHARACTER" }
-)
-ChangeSortKey("winona_toolbox", "treasurechest", "CONTAINERS", true)
-ChangeSortKey("winona_toolbox", "sewing_tape", "CHARACTER", true)
+if GetModConfigData("winona_items") then
+    AddRecipe2(
+        "winona_toolbox",
+        { Ingredient("boards", 2), Ingredient("goldnugget", 4), Ingredient("sewing_tape", 2) },
+        TECH.NONE,
+        { builder_tag = "handyperson" },
+        { "CONTAINERS", "CHARACTER" }
+    )
+    ChangeSortKey("winona_toolbox", "treasurechest", "CONTAINERS", true)
+    ChangeSortKey("winona_toolbox", "sewing_tape", "CHARACTER", true)
 
-AddRecipe2(
-    "powercell",
-    { Ingredient("sewing_tape", 1), Ingredient("goldnugget", 1), Ingredient("nitre", 2) },
-    TECH.NONE,
-    { builder_tag = "handyperson", numtogive = 3 },
-    { "CHARACTER" }
-)
-ChangeSortKey("powercell", "winona_battery_high", "CHARACTER", true)
+    AddRecipe2(
+        "powercell",
+        { Ingredient("sewing_tape", 1), Ingredient("goldnugget", 1), Ingredient("nitre", 2) },
+        TECH.NONE,
+        { builder_tag = "handyperson", numtogive = 3 },
+        { "CHARACTER" }
+    )
+    ChangeSortKey("powercell", "winona_battery_high", "CHARACTER", true)
 
-AddRecipe2(
-    "winona_upgradekit_electrical",
-    { Ingredient("goldnugget", 6), Ingredient("sewing_tape", 2), Ingredient("wagpunk_bits", 4) },
-    TECH.SCIENCE_TWO,
-    { builder_tag = "handyperson" },
-    { "CHARACTER", "LIGHT" }
-)
-ChangeSortKey("winona_upgradekit_electrical", "winona_toolbox", "CHARACTER", true)
+    AddRecipe2(
+        "winona_upgradekit_electrical",
+        { Ingredient("goldnugget", 6), Ingredient("sewing_tape", 2), Ingredient("wagpunk_bits", 4) },
+        TECH.SCIENCE_TWO,
+        { builder_tag = "handyperson" },
+        { "CHARACTER", "LIGHT" }
+    )
+    ChangeSortKey("winona_upgradekit_electrical", "winona_toolbox", "CHARACTER", true)
+end
 
 AddRecipeToFilter("wardrobe", "CONTAINERS")
 ChangeSortKey("wardrobe", "icebox", "CONTAINERS", false)
@@ -808,7 +814,7 @@ if GetModConfigData("monstersmallmeat") then
         "transmute_monstermeat",
         { Ingredient("monstersmallmeat", 3) },
         TECH.NONE,
-        { product = "monstermeat", builder_tag = "ick_alchemistI", description = "transmute_monstermeat" },
+        { product = "monstermeat", builder_skill="wilson_alchemy_4", description = "transmute_monstermeat" },
         { "CHARACTER" }
     )
 
@@ -818,7 +824,7 @@ if GetModConfigData("monstersmallmeat") then
         TECH.NONE,
         {
             product = "monstersmallmeat",
-            builder_tag = "ick_alchemistI",
+            builder_skill="wilson_alchemy_4",
             description = "transmute_monstersmallmeat",
             numtogive = 2
         },
@@ -951,22 +957,6 @@ AddRecipe2(
 )
 ChangeSortKey("hermitshop_cookies", "hermitshop_supertacklecontainer", "CRAFTING_STATION", true)
 
-AddRecipe2(
-    "chum",
-    { Ingredient("spoiled_food", 2), Ingredient("rope", 1), Ingredient("waterplant_bomb", 1) },
-    TECH.FISHING_ONE,
-    { numtogive = 2 },
-    { "FISHING" }
-)
-AllRecipes["chum"].ingredients = {
-    Ingredient("spoiled_food", 1),
-    Ingredient("rope", 1),
-    Ingredient("waterplant_bomb", 1)
-}
-if not GLOBAL.TUNING.DSTU.UPDATE_CHECK then
-    AllRecipes["hermitshop_chum"].ingredients = { Ingredient("messagebottleempty", 1) }
-    AllRecipes["hermitshop_chum"].numtogive = 3
-end
 --[[
 AddRecipe2(
 "hermitshop_oil",
@@ -1340,11 +1330,47 @@ if GetModConfigData("wixie_walter") then
         { builder_tag = "pebblemaker", numtogive = 10, no_deconstruction = true, nounlock = true },
         { "CRAFTING_STATION", "CHARACTER", "WEAPONS" }
     )
-
+	
     GLOBAL.STRINGS.RECIPE_DESC.SLINGSHOTAMMO_OBSIDIAN = "A playful bit of arson."
     ChangeSortKey("slingshotammo_obsidian", "armorobsidian", "CRAFTING_STATION", true)
     ChangeSortKey("slingshotammo_obsidian", "slingshotammo_tar", "CHARACTER", true)
     ChangeSortKey("slingshotammo_obsidian", "slingshotammo_tar", "WEAPONS", true)
+	
+	AllRecipes["slingshotammo_stinger"].builder_skill = "wixie_slingshot_ammo_stinger"
+	AllRecipes["slingshotammo_dreadstone"].builder_skill = "wixie_slingshot_ammo_dreadstone"
+	AllRecipes["slingshotammo_scrapfeather"].builder_skill = "wixie_slingshot_ammo_scrapfeather"
+	AllRecipes["slingshotammo_gunpowder"].builder_skill = "wixie_slingshot_ammo_gunpowder"
+	AllRecipes["slingshotammo_lunarplanthusk"].builder_skill = "wixie_allegiance_lunar"
+	AllRecipes["slingshotammo_purebrilliance"].builder_skill = "wixie_allegiance_lunar"
+	AllRecipes["slingshotammo_gelblob"].builder_skill = "wixie_allegiance_shadow"
+	AllRecipes["slingshotammo_horrorfuel"].builder_skill = "wixie_allegiance_shadow"
+	AllRecipes["slingshotammo_container"].builder_skill = "wixie_ammo_bag"
+	AllRecipes["slingshotammo_stinger"].numtogive = 10
+	AllRecipes["slingshotammo_dreadstone"].numtogive = 10
+	AllRecipes["slingshotammo_scrapfeather"].numtogive = 10
+	AllRecipes["slingshotammo_gunpowder"].numtogive = 10
+	AllRecipes["slingshotammo_lunarplanthusk"].numtogive = 10
+	AllRecipes["slingshotammo_purebrilliance"].numtogive = 10
+	AllRecipes["slingshotammo_gelblob"].numtogive = 10
+	AllRecipes["slingshotammo_horrorfuel"].numtogive = 10
+	
+	AddRecipe2(
+        "slingshot_jessie",
+        { Ingredient("horrorfuel", 2), Ingredient("voidcloth", 2) },
+        GLOBAL.TECH.SHADOWFORGING_TWO,
+        { builder_tag = "skill_wixie_allegiance_shadow", nounlock = true, station_tag = "shadow_forge" },
+        { "CRAFTING_STATION", "CHARACTER", "WEAPONS" }
+    )
+    GLOBAL.STRINGS.RECIPE_DESC.SLINGSHOT_JESSIE = "Morphic mind gun."
+
+    AddRecipe2(
+        "slingshot_claire",
+        { Ingredient("purebrilliance", 2), Ingredient("lunarplant_husk", 2) },
+        GLOBAL.TECH.LUNARFORGING_TWO,
+        { builder_tag = "skill_wixie_allegiance_lunar", nounlock = true, station_tag = "lunar_forge" },
+        { "CRAFTING_STATION", "CHARACTER", "WEAPONS" }
+    )
+    GLOBAL.STRINGS.RECIPE_DESC.SLINGSHOT_CLAIRE = "Freedom. Of movement, atleast."
 
     AddRecipe2(
         "bagofmarbles",
@@ -1367,6 +1393,8 @@ if GetModConfigData("wixie_walter") then
     GLOBAL.STRINGS.RECIPE_DESC.MEATRACK_HAT = "The jerkiest of hats."
     ChangeSortKey("meatrack_hat", "walterhat", "CLOTHING", true)
     ChangeSortKey("meatrack_hat", "walterhat", "CHARACTER", true)
+
+	AllRecipes["bandage_butterflywings"].ingredients = { Ingredient("butterflywings", 3), Ingredient("petals", 1) }
 
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.WIXIEGUN = "Shhh, don't spoil it! ;)"
 
@@ -1566,10 +1594,10 @@ STRINGS.RECIPE_DESC.HERMIT_BUNDLE_LURES = "Get to fishing, today!"
 STRINGS.RECIPE_DESC.UM_ARMOR_PYRE_NETTLES = "Hurts you a little, hurts them a lot."
 STRINGS.RECIPE_DESC.UM_BLOWDART_PYRE = "Warm and fuzzy, inside AND out!"
 
-STRINGS.RECIPE_DESC.WINONA_CATAPULT_ITEM = STRINGS.RECIPE_DESC.WINONA_CATAPULT
-STRINGS.RECIPE_DESC.WINONA_SPOTLIGHT_ITEM = STRINGS.RECIPE_DESC.WINONA_SPOTLIGHT
-STRINGS.RECIPE_DESC.WINONA_BATTERY_LOW_ITEM = STRINGS.RECIPE_DESC.WINONA_BATTERY_LOW
-STRINGS.RECIPE_DESC.WINONA_BATTERY_HIGH_ITEM = STRINGS.RECIPE_DESC.WINONA_BATTERY_HIGH
+STRINGS.RECIPE_DESC.WINONA_CATAPULT_ITEM_UM = STRINGS.RECIPE_DESC.WINONA_CATAPULT
+STRINGS.RECIPE_DESC.WINONA_SPOTLIGHT_ITEM_UM = STRINGS.RECIPE_DESC.WINONA_SPOTLIGHT
+STRINGS.RECIPE_DESC.WINONA_BATTERY_LOW_ITEM_UM = STRINGS.RECIPE_DESC.WINONA_BATTERY_LOW
+STRINGS.RECIPE_DESC.WINONA_BATTERY_HIGH_ITEM_UM = STRINGS.RECIPE_DESC.WINONA_BATTERY_HIGH
 
 GLOBAL.STRINGS.RECIPE_DESC.PACT_ARMOR_SANITY = "Wrapped in your sins."
 GLOBAL.STRINGS.RECIPE_DESC.PACT_SWORD_SANITY = "Hefty, like the weight on your shoulders."

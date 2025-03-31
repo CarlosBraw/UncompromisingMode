@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/backpack.zip"),
     Asset("ANIM", "anim/swap_krampus_sack.zip"),
-    Asset("ANIM", "anim/ui_krampusbag_2x5.zip"),
 }
 
 local function TryPerish(item)
@@ -145,7 +144,8 @@ local function fn()
 
     inst:AddTag("backpack")
     inst:AddTag("sporepack")
-
+    inst:AddTag("donotautopick")
+    
     MakeInventoryFloatable(inst, "med", 0.1, 0.65)
 
     inst.entity:SetPristine()

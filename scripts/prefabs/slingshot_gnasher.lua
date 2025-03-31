@@ -14,13 +14,17 @@ local easing = require("easing")
 local PROJECTILE_DELAY = 2 * FRAMES
 
 local function OnEquip(inst, owner)
-    local skin_build = inst:GetSkinBuild()
-    if skin_build ~= nil then
-        owner:PushEvent("equipskinneditem", inst:GetSkinName())
-        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_slingshot", inst.GUID, "swap_slingshot")
-    else
-        owner.AnimState:OverrideSymbol("swap_object", "swap_slingshot_gnasher", "swap_slingshot")
-    end
+	--[[owner.AnimState:OverrideSymbol("swap_object", "slingshot", "swap_empty")
+	owner.AnimState:OverrideSymbol("swap_band_btm", "slingshot", "swap_band_btm_gnasher")
+	owner.AnimState:OverrideSymbol("swap_band_top", "slingshot", "swap_band_top_gnasher")
+	owner.AnimState:OverrideSymbol("swap_handle", "slingshot", "swap_slingshot_gnasher")
+	
+	inst.AnimState:ClearOverrideSymbol("swap_handle")
+	inst.AnimState:ClearOverrideSymbol("swap_band_top")
+	inst.AnimState:ClearOverrideSymbol("swap_band_btm")]]
+
+	owner.AnimState:OverrideSymbol("swap_object", "swap_slingshot_gnasher", "swap_slingshot")
+    
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 
@@ -86,6 +90,11 @@ local function ReticuleMouseTargetFn(inst, mousepos)
         local dx = mousepos.x - x
         local dz = mousepos.z - z
         local l = dx * dx + dz * dz
+		
+		local dist = inst:GetDistanceSqToPoint(mousepos.x, 0, mousepos.z)
+		
+		inst.components.reticule.fadealpha = dist / 100
+		
         if l <= 0 then
             return inst.components.reticule.targetpos
         end
@@ -139,7 +148,7 @@ local function LaunchSpit(inst, caster, target, shadow)
 				projectile.components.complexprojectile:SetLaunchOffset(Vector3(1.5, 1.5, 0))
 			else
 				if ammo == "slingshotammo_moonglass_proj_secondary" then
-					projectile.components.projectile:SetSpeed(10 + 10 * projectile.powerlevel)
+					projectile.components.projectile:SetSpeed(20)
 				else
 					projectile.components.projectile:SetSpeed(10 + 10 * projectile.powerlevel)
 				end
@@ -244,18 +253,19 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("slingshot")
+    inst.AnimState:SetBank("slingshot_gnasher")
     inst.AnimState:SetBuild("slingshot_gnasher")
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("rangedweapon")
+    inst:AddTag("wixie_weapon")
     inst:AddTag("slingshot")
     inst:AddTag("gnasher")
     inst:AddTag("allow_action_on_impassable")
 
     --weapon (from weapon component) added to pristine state for optimization
     inst:AddTag("weapon")
-
+    inst:AddTag("donotautopick")
     --inst.projectiledelay = PROJECTILE_DELAY
 
     MakeInventoryFloatable(inst, "med", 0.075, {0.5, 0.4, 0.5}, true, -7, floater_swap_data)
@@ -263,7 +273,7 @@ local function fn()
     inst.spelltype = "SLINGSHOT"
 
     inst:AddComponent("reticule")
-    inst.components.reticule.reticuleprefab = "reticuleline2"
+    inst.components.reticule.reticuleprefab = "wixie_reticuleline"
     inst.components.reticule.pingprefab = "reticulelongping"
     --inst.components.reticule.reticuleprefab = "reticuleline2"
     --inst.components.reticule.pingprefab = "reticulelineping"

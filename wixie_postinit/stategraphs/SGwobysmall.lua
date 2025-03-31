@@ -1,7 +1,7 @@
 local env = env
 GLOBAL.setfenv(1, GLOBAL)
 
-env.AddStategraphPostInit("SGcritter_puppy", function(inst)
+env.AddStategraphPostInit("wobysmall", function(inst)
 
 local actionhandlers =
 {
@@ -69,14 +69,14 @@ local states = {
 			inst.Physics:Stop()
 
             inst.AnimState:PlayAnimation("emote_nuzzle")
+			
+			inst.sg:SetTimeout(30*FRAMES)
 		end,
 
 		timeline =
 		{
 			TimeEvent(13*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/pupington/emote_scratch") end),
 			TimeEvent(13*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/pupington/pant") end),
-			TimeEvent(35*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/pupington/emote_scratch") end),
-			TimeEvent(36*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/pupington/pant") end),
 
 			TimeEvent(9*FRAMES, function(inst)
 				inst.SoundEmitter:PlaySound("dontstarve/creatures/together/pupington/pant")
@@ -122,6 +122,10 @@ local states = {
                 end
 			end),
 		},
+
+            ontimeout = function(inst)
+                inst.sg:GoToState("idle")
+            end,
 
 		events =
 		{

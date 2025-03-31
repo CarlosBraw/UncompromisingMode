@@ -22,7 +22,6 @@ local component_post = {
     "eater",
     "edible",
     "inventory", -- This is an attempt at manually fixing an issue when people are checked for insulation. -scrimbles
-    "weighable",
     "messagebottlemanager",
     "fishingnet",
     "boatleak", -- for custom boat patches.
@@ -51,7 +50,9 @@ local component_post = {
     "walkableplatformplayer",
     "schoolspawner",
     "builder",
-    "raindome"
+    --"raindome"
+    "stewer",
+    "boatmagnet",
 }
 
 local prefab_post = {
@@ -101,7 +102,6 @@ local prefab_post = {
     "armor_ruins",
     "sweatervest",
     "fans",
-    "skeletonhat",
     --	"rock_avocado_fruit_sprout_sapling",
     "icepack",
     "heatrock",
@@ -183,7 +183,6 @@ local prefab_post = {
     "mermhat",
     "wptags",
     "inventoryitem_classified",
-    "cannonballs",
     --	"renameable_items",
     "lightninggoatherd",
     "archive_centipede",
@@ -198,7 +197,16 @@ local prefab_post = {
     "compass",
     "seedpouch",
     "voidcloth_umbrella",
-	"mushroom_farm"
+	"mushroom_farm",
+    "toolbox_items",
+	"otter",
+    "winona_telebrella",
+    "stash_map",
+    "mushtrees",
+    --"monkeyhut",
+	--"lava_pond",
+	"cookiecutter",
+    "seastack", --loot changes
 }
 
 local stategraph_post = {
@@ -244,11 +252,11 @@ if GetModConfigData("wixie_walter") then
     local wixie_prefabs = {
         "extra_claustrophobia_checks", -- extra tag that wixie checks when registering claustrophobia, for stuff like jackolanterns and ruins relics
         "slingshot",                   -- stuff for new slingshot aiming and wixie exclusivity
+		"slingshotammo",                   -- no skill
         "walter",                      -- all of walters things, including woby action
         "wobysmall",
         "wobybig",
         "wormhole",      -- wixie loses more sanity from wormholes
-        "slingshotammo", -- removes hunger value from slingshot ammo, preventing slurtle feeding strats
         "coconut",       -- shoot a coconut
 		"sculptingtable" -- Sculpting table crashes if picker inventory is nil
     }
@@ -291,10 +299,6 @@ if GetModConfigData("wixie_walter") then
     RemapSoundEvent("dontstarve/characters/wixie/eye_rub_vo", "wixie/characters/wixie/eye_rub_vo")
     RemapSoundEvent("dontstarve/characters/wixie/carol", "wixie/characters/wixie/carol")
     RemapSoundEvent("dontstarve/characters/wixie/sinking", "wixie/characters/wixie/sinking")
-end
-
-if not GLOBAL.TUNING.DSTU.UPDATE_CHECK then
-    table.insert(prefab_post, "slurtle_shellpieces")
 end
 
 if GetModConfigData("hangyperds") then
@@ -373,7 +377,7 @@ if GetModConfigData("harder_spider_queen") then
     table.insert(stategraph_post, "spiderqueen")
 end
 
-if GetModConfigData("pocket_powertrip") ~= 0 then
+if GetModConfigData("pocket_powertrip_") then
     table.insert(prefab_post, "pocket_powertrip")
 end
 
@@ -418,9 +422,6 @@ if GetModConfigData("harder_krampus") then
     table.insert(stategraph_post, "krampus")
 end
 
-if GetModConfigData("noauradamage_butterfly") then
-    table.insert(prefab_post, "butterfly")
-end
 
 if GetModConfigData("beefalo_nerf") then
     table.insert(component_post, "rider")
@@ -440,22 +441,11 @@ end
 --	table.insert(prefab_post, "boat")
 -- end
 
-if GetModConfigData("winona_portables_") then
-    table.insert(prefab_post, "winona_portables")
-end
-
-if GetModConfigData("reworked_ck") then
-    table.insert(prefab_post, "crabking")
-    table.insert(prefab_post, "crabking_claw")
-    table.insert(stategraph_post, "crabkingclaw")
-end
-
-table.insert(prefab_post, "shadowchesspieces") --changes to  all 3 pieces. (no collision and shadowcrown loot)
-
 if GetModConfigData("changed_shadow_pieces") then
     --table.insert(prefab_post, "shadow_knight")
     table.insert(stategraph_post, "shadow_bishop")
     --table.insert(stategraph_post, "shadow_knight")
+	table.insert(prefab_post, "shadowchesspieces") --changes to  all 3 pieces. (no collision and shadowcrown loot)	
 end
 
 if GetModConfigData("hambatnerf") then
@@ -493,11 +483,6 @@ end
 if GetModConfigData("smog") then
     table.insert(prefab_post, "dragoonegg")
     table.insert(component_post, "geyserfx")
-end
-
-
-if GetModConfigData("sharpshooter_monkeys_") then
-    table.insert(brain_post, "powdermonkey")
 end
 
 modimport("postinit/sim")

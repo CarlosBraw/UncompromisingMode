@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/slingshot.zip"),
-    Asset("ANIM", "anim/swap_slingshot.zip"),
 }
 
 local prefabs =
@@ -128,7 +127,7 @@ local function fn()
 
     --weapon (from weapon component) added to pristine state for optimization
     inst:AddTag("weapon")
-
+    inst:AddTag("donotautopick")
     --inst.projectiledelay = PROJECTILE_DELAY
 
 	--MakeInventoryFloatable(inst, "med", 0.075, {0.5, 0.4, 0.5}, true, -7, floater_swap_data)

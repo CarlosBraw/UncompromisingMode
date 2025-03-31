@@ -2,6 +2,9 @@ local env = env
 GLOBAL.setfenv(1, GLOBAL)
 -----------------------------------------------------------------
 if TUNING.DSTU.MUSHROOM_CHANGES then
+
+	local UpvalueHacker = require("tools/upvaluehacker")
+	
 	env.AddPrefabPostInit("mushroom_farm", function(inst)
 		if not TheNet:GetIsServer() then
 			return
@@ -13,9 +16,9 @@ if TUNING.DSTU.MUSHROOM_CHANGES then
 
 		-- 8 compost nutrients = 1 refuel
 		inst.refuel_items = {
-			["compost"] = 2,			
+			["compost"] = 1,			
 			["glommerfuel"] = 2,
-			["compostwrap"] = max_harvests,
+			["compostwrap"] = 3,
 			["treegrowthsolution"] = max_harvests,
 			["livinglog"] = max_harvests,
 		}

@@ -32,6 +32,7 @@ TUNING.DSTU = {
     -- Armor
     ----------------------------------------------------------------------------
     ARMORREED_UM = TUNING.WILSON_HEALTH * 2 * multiplayer_armor_durability_modifier,
+	BEE_ALLERGY_PROTECTION_EXTRADAMAGE = 5,	
     ----------------------------------------------------------------------------
     -- Acid colour
     ----------------------------------------------------------------------------
@@ -39,6 +40,8 @@ TUNING.DSTU = {
     ----------------------------------------------------------------------------
     -- Food changes
     ----------------------------------------------------------------------------
+    -- Goodie nerf
+    GOODIESNERF = GetModConfigData("goodies_nerf"),
     -- Global appearance rate of foods
     FOOD_CARROT_PLANTED_APPEARANCE_PERCENT = 0.75,
     FOOD_BERRY_NORMAL_APPEARANCE_PERCENT = 0.6,
@@ -58,7 +61,7 @@ TUNING.DSTU = {
     FOOD_SPOILED_FOOD_SANITY = -5,
     FOOD_SEEDS_HUNGER = 1.5,
     -- Food production
-    FOOD_HONEY_PRODUCTION_PER_STAGE = { 0, 1, 3, 6 },
+    FOOD_HONEY_PRODUCTION_PER_STAGE = { 0, 1, 2, 3 },
     -- Respawn time increases
     BUNNYMAN_RESPAWN_TIME_DAYS = 3,
     ----------------------------------------------------------------------------""""
@@ -162,7 +165,6 @@ TUNING.DSTU = {
     VARGWAVES = false,           -- GetModConfigData("vargwaves"),
     VARGWAVES_BOSS_GRACE = 15,   -- GetModConfigData("vargwaves grace"),
     VARGWAVES_DELAY_PERIOD = 15, -- GetModConfigData("vargwaves delay"),
-    LATEGAMEHOUNDSPREAD = GetModConfigData("lategamehoundspread"),
     -- Worm inclusion
     DEPTHSEELS = GetModConfigData("depthseels"),
     DEPTHSVIPERS = GetModConfigData("depthsvipers"),
@@ -242,7 +244,8 @@ TUNING.DSTU = {
     -- Wickerbottom
     WICKERNERF = GetModConfigData("wickerbottom"),
     WICKERNERF_TENTACLES = GetModConfigData("on tentacles"),
-
+	-- Wortox
+	WORTOXCHANGES = GetModConfigData("wortox"),
     -- Willow
     --WILLOW_INSULATION = GetModConfigData("willow insulation"),
 
@@ -255,7 +258,7 @@ TUNING.DSTU = {
     -- Wanda
     WANDA_NERF = GetModConfigData("wanda_nerf"),
     -- Wortox
-    WORTOX = GetModConfigData("wortox"),
+    -- WORTOX = GetModConfigData("wortox"),
     -- Mobs
     RAIDRAT_HEALTH = 100,
     RAIDRAT_DAMAGE = 20,
@@ -314,7 +317,9 @@ TUNING.DSTU = {
     GREEN_VOMIT_NUTRIENTS = { 0, 0, 24 },
     PINK_VOMIT_NUTRIENTS = { 24, 0, 0 },
     PALE_VOMIT_NUTRIENTS = { 8, 8, 8 },
-	MUSHROOM_CHANGES = GetModConfigData("mushroom_changes"),
+    MUSHROOM_CHANGES = GetModConfigData("mushroom_changes"),
+	ALL_MUST_BE_GATHERED = GetModConfigData("all_must_be_gathered"),
+	WATERING_TEMPERATURE = GetModConfigData("watering_thermal"),
 
     ----------------------------------------------------------------------------
     -- Dynamic Boss Resistance
@@ -343,14 +348,13 @@ TUNING.DSTU = {
     ANNOUNCE_BASESTATUS = GetModConfigData("announce_basestatus"),
     EYEBRELLAREWORK = GetModConfigData("eyebrellarework"),
     -- More Config
-    UPDATE_CHECK = CurrentRelease.GreaterOrEqualTo("R33_QOL_SPRINGCLEANING"), -- REMEMBER TO ALWAYS UPDATE THIS WITH NEW BETAS.
-    POCKET_POWERTRIP = GetModConfigData("pocket_powertrip"),
+    UPDATE_CHECK = CurrentRelease.GreaterOrEqualTo("R36_ST_WENDWALTWORT"), -- REMEMBER TO ALWAYS UPDATE THIS WITH NEW BETAS.
+    POCKET_POWERTRIP = GetModConfigData("pocket_powertrip_"),
     WINTER_BURNING = GetModConfigData("winter_burning"),
-    HUNGRY_VOID = GetModConfigData("hungry_void"),
     BUTTERFLYWINGS_NERF = GetModConfigData("butterflywings_nerf"),
     LONGPIG = GetModConfigData("longpig"),
     RAW_CROPS_NERF = GetModConfigData("rawcropsnerf"),
-    WENDY_NERF = GetModConfigData("wendy"),
+    WENDY = GetModConfigData("wendy"),
     TOADS = GetModConfigData("toads"),
     MONSTER_EGGS = GetModConfigData("monster_eggs"),
     IMPASSBLES = GetModConfigData("passibleimpassibles"),
@@ -360,10 +364,9 @@ TUNING.DSTU = {
     HUNGRYFROGS = GetModConfigData("hungryfrogs"),
     COWARDFROGS = GetModConfigData("cowardfrogs"),
     INSUL_THERMALSTONE = GetModConfigData("insul_thermalstone"),
-    UNCOOL_CHESTER = GetModConfigData("uncool_chester"),
+    UNCOOL_CHESTER = GetModConfigData("uncool_chester_"),
     HOODEDFOREST = GetModConfigData("hoodedforest"),
     GHOSTWALRUS = GetModConfigData("ghostwalrus"),
-    WINONA_GEN = GetModConfigData("winona_gen_"),
     RICE = GetModConfigData("rice"),
     NEWRECIPES = GetModConfigData("newrecipes"),
     CAVECLOPS = GetModConfigData("cave_clops"),
@@ -378,11 +381,13 @@ TUNING.DSTU = {
     WATHOM_AMPED_VULNERABILITY = GetModConfigData("wathom_ampvulnerability"),
     WATHOM_ARMOR_DAMAGE = GetModConfigData("wathom_armordamage"),
     SHADOW_WATHOM = GetModConfigData("wathom_undeath"),
+    WATHOM_NIGHTVISON_CC = GetModConfigData("wathom_nightvision", true),
     PK_GUARDS = GetModConfigData("pigking_guards"),
     BERNIE_BUFF = GetModConfigData("bernie_buffs"),
     COMPROMISING_SHADOWVORTEX = GetModConfigData("compromising_vortex"),
     DISABLE_MEGAFLARE = GetModConfigData("disable_megaflare"),
     WIXIE = GetModConfigData("wixie_walter"),
+    WOBYHUNGER_CLASSIC = GetModConfigData("woby_hunger_classic"),
     WIXIE_BIRDS = GetModConfigData("wixie_birds"),
     MONSTERSMALLMEAT = GetModConfigData("monstersmallmeat"),
     THE_COOLER_SACRED_CHEST = GetModConfigData("the_cooler_sacred_chest"),
@@ -395,7 +400,6 @@ TUNING.DSTU = {
     MAXTEMPDAMAGE = GetModConfigData("maxtempdamage"),
     MAXHUNGERDAMAGE = GetModConfigData("maxhungerdamage"),
     HARDER_TREPIDATION = GetModConfigData("nodespawn_trepidation"),
-    WINONA_PORTABLES = GetModConfigData("winona_portables_"),
     TELESTAFF_REWORK = GetModConfigData("telestaff_rework"),
     BEEBOX_NERF = GetModConfigData("beebox_nerf"),
     CANEDURABILITY = GetModConfigData("canedurability"),
@@ -440,10 +444,10 @@ end
 
 if GetModConfigData("wixie_walter") then
     TUNING.WOBY_BIG_HUNGER = GLOBAL.TUNING.WALTER_HUNGER
-    TUNING.WOBY_BIG_HUNGER_RATE = GLOBAL.TUNING.WILSON_HUNGER_RATE / 2
+    TUNING.WOBY_BIG_HUNGER_RATE = GLOBAL.TUNING.WILSON_HUNGER_RATE / 2.5
 
     TUNING.WOBY_SMALL_HUNGER = GLOBAL.TUNING.WALTER_HUNGER
-    TUNING.WOBY_SMALL_HUNGER_RATE = GLOBAL.TUNING.WILSON_HUNGER_RATE / 2
+    TUNING.WOBY_SMALL_HUNGER_RATE = GLOBAL.TUNING.WILSON_HUNGER_RATE / 2.5
 
     TUNING.WOBY_BIG_SPEED =
     {
@@ -520,53 +524,45 @@ TUNING.HAWAIIANSHIRT_PERISHTIME = TUNING.HAWAIIANSHIRT_PERISHTIME + total_day_ti
 -- trident buff
 TUNING.TRIDENT.DAMAGE = wilson_attack * 1.5
 TUNING.TRIDENT.OCEAN_DAMAGE = wilson_attack * 2.4
-TUNING.TRIDENT.USES = TUNING.TRIDENT.USES + 50
 TUNING.TRIDENT.SPELL.USE_COUNT = TUNING.TRIDENT.USES * 2
 TUNING.TRIDENT.SPELL.DAMAGE = wilson_attack * 1.33
 
 -- bumper buff
 TUNING.BOAT.BUMPERS.KELP.HEALTH = TUNING.BOAT.BUMPERS.KELP.HEALTH * 1.33
 TUNING.BOAT.BUMPERS.SHELL.HEALTH = TUNING.BOAT.BUMPERS.SHELL.HEALTH * 1.33
-
+TUNING.BOAT.BUMPERS.CRABKING.HEALTH = TUNING.BOAT.BUMPERS.CRABKING.HEALTH * 1.33
+TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE = TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE * 2
 -- cannon buff
 TUNING.CANNONBALLS.ROCK.SPEED = TUNING.CANNONBALLS.ROCK.SPEED * 1.25
 TUNING.CANNONBALLS.ROCK.GRAVITY = TUNING.CANNONBALLS.ROCK.GRAVITY * 1.25
 
-TUNING.CANNONBALL_RADIUS = TUNING.CANNONBALL_RADIUS * 1.25
-TUNING.CANNONBALL_SPLASH_RADIUS = TUNING.CANNONBALL_SPLASH_RADIUS * 1.33
+--TUNING.CANNONBALL_RADIUS = TUNING.CANNONBALL_RADIUS * 1.25
+--TUNING.CANNONBALL_SPLASH_RADIUS = TUNING.CANNONBALL_SPLASH_RADIUS * 1.33
 TUNING.CANNONBALL_SPLASH_DAMAGE_PERCENT = 1
 
 -- sea weed changes
 TUNING.WATERPLANT.DAMAGE = TUNING.WATERPLANT.DAMAGE * 0.75
-if not TUNING.DSTU.UPDATE_CHECK then
-    TUNING.WATERPLANT.ITEM_DAMAGE = TUNING.WATERPLANT.ITEM_DAMAGE * 1.75
-end
--- shark nerf
-TUNING.SHARK.DAMAGE = 50 / 3
+
 
 -- more treasures
 TUNING.MESSAGEBOTTLE_NOTE_CHANCE = 0.66
 
 -- nautopilot buff
-TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE = TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE * 2
-TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY = TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY *
-    10 -- No matter the boatspeed, nautopilots should be able to keep up.
-TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED = TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED * 100
+--TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE = TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE * 2
+TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY = TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY * 2 --No matter the boatspeed, nautopilots should be able to keep up.
+TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED = TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED * 2
+TUNING.BOAT.BOAT_MAGNET.MAGNET_FORCE = TUNING.BOAT.BOAT_MAGNET.MAGNET_FORCE * 2
 
 -- lowered CK health
 -- TUNING.CRABKING_HEALTH = TUNING.CRABKING_HEALTH * 0.66
 -- TUNING.CRABKING_HEALTH_BONUS = TUNING.CRABKING_HEALTH_BONUS * 0.66
-if GetModConfigData("reworked_ck") then
-    TUNING.CRABKING_REGEN = 400
-    TUNING.CRABKING_BASE_CLAWS = 3.5
-end
 -- TUNING.CRABKING_REGEN_BUFF = TUNING.CRABKING_REGEN * 0.33
 
 -- Wortox
-if GetModConfigData("wortox") then
-    TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL = 5
-    TUNING.WORTOX_MAPHOP_DISTANCE_SCALER = TUNING.WORTOX_MAPHOP_DISTANCE_SCALER * 1.5 -- 50%
-end
+--if GetModConfigData("wortox") then
+    --TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL = 5
+    --TUNING.WORTOX_MAPHOP_DISTANCE_SCALER = TUNING.WORTOX_MAPHOP_DISTANCE_SCALER * 1.5 -- 50%
+--end
 
 if GetModConfigData("heatwaves") then
     TUNING.WILDFIRE_CHANCE = TUNING.WILDFIRE_CHANCE * 10 --testing, fuck it why not?!
@@ -637,3 +633,4 @@ if GetModConfigData("waxwell_nerf") then
 end
 
 TUNING.COMPASS_FUEL = total_day_time * 5
+TUNING.FISHINGROD_USES = TUNING.FISHINGROD_USES + 1  --this is gonna cause a merge conflict later. Too bad!

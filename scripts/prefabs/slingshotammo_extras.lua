@@ -5,11 +5,13 @@ local assets_firecrackers = { Asset("ANIM", "anim/firecrackers.zip") }
 local prefabs_firecrackers = { "explode_firecrackers" }
 
 local AURA_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "abigail", "companion", "ghost", "shadow", "shadowminion", "noauradamage", "INLIMBO", "notarget", "noattack", "invisible" }
-local GOOP_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "shadow", "shadowminion", "INLIMBO", "notarget", "noattack", "invisible" }
+local GOOP_EXCLUDE_TAGS = { "noclaustrophobia", "rabbit", "playerghost", "shadow", "shadowminion", "INLIMBO", "notarget", "noattack", "invisible", "webbedcreature", "bee" }
 
 if not TheNet:GetPVPEnabled() then
     table.insert(AURA_EXCLUDE_TAGS, "player")
 end
+
+require("wixie_shove")
 
 -- temp aggro system for the slingshots
 local function no_aggro(attacker, target)
@@ -29,7 +31,7 @@ local function DealDamage(inst, attacker, target, salty)
                 inst.finaldamage = inst.finaldamage * 2
             end
         end
-
+		
         if no_aggro(attacker, target) then
             target.components.combat:SetShouldAvoidAggro(attacker)
         end
@@ -45,10 +47,19 @@ local function DealDamage(inst, attacker, target, salty)
                 target.wixieammo_hitstuncd = nil
             end)
 
-			target.components.combat:GetAttacked(weapon ~= nil and attacker or inst, inst.finaldamage, weapon)
+			target.components.combat:GetAttacked(weapon ~= nil and attacker or inst, inst.planar_ammo and 0 or inst.finaldamage, weapon, nil, {planar = inst.planar_ammo and inst.finaldamage or 0})
         else
 			target.components.combat:GetAttacked(weapon ~= nil and attacker or inst, 0, weapon)
 
+			if target.components.planarentity then
+				if not inst.planar_ammo then
+					inst.finaldamage = (math.sqrt(inst.finaldamage * 4 + 64) - 8) * 4
+					target.components.planarentity:OnResistNonPlanarAttack(attacker)
+				else
+					target.components.planarentity:OnPlanarAttackUndefended(target)
+				end
+			end
+		
             target.components.health:DoDelta(-inst.finaldamage, false, attacker, false, attacker, false)
         end
 
@@ -192,9 +203,10 @@ local function DoPop(inst, remaining, total, level, hissvol)
         end
     end
 
-    for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.FIRECRACKERS_STARTLE_RANGE, STARTLE_TAGS)) do
-        v:PushEvent("startle", { source = inst })
-    end
+	-- I removed the startle portion of the ammo because it was op, but im nostalgic, so I didn't remove the code.
+    --for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.FIRECRACKERS_STARTLE_RANGE, STARTLE_TAGS)) do
+        --v:PushEvent("startle", { source = inst })
+    --end
 
     if remaining > 1 then
         inst.AnimState:PlayAnimation("spin_loop" .. tostring(math.random(3)))
@@ -298,7 +310,7 @@ local function fn()
     inst.attacker = nil
 
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_PELLET
 
     inst:AddComponent("inventoryitem")
 
@@ -566,6 +578,7 @@ local function OnHit_Rubber(inst, attacker, target)
                     rubberband.Transform:SetPosition(target.Transform:GetWorldPosition())
                     rubberband.components.projectile:Throw(inst, v, attacker)
                     rubberband.components.projectile:SetHoming(true)
+					rubberband.planar_ammo = inst.planar_ammo
 
                     rubberband.maxbounces = 30 * inst.powerlevel
 
@@ -592,6 +605,7 @@ local function OnHit_Tremor(inst, attacker, target)
         tremors.Transform:SetPosition(target.Transform:GetWorldPosition())
         tremors.powerlevel = inst.powerlevel
         tremors.attacker = attacker
+        tremors.planar_ammo = inst.planar_ammo
     end
 
     inst:Remove()
@@ -655,7 +669,7 @@ local function OnHit_Goop(inst, attacker, target)
         local playerdetected = false
         local goop = SpawnPrefab("slingshotammo_goop_proj_secondary")
 
-        local players = TheSim:FindEntities(x, y, z, 10, { "_combat" }, { "noclaustrophobia", "playerghost" }, { "companion", "player" })
+        local players = TheSim:FindEntities(x, y, z, 10, { "_combat" }, { "noclaustrophobia", "playerghost", "webbedcreature", "bee" }, { "companion", "player" })
         local ents = TheSim:FindEntities(x, y, z, 10, { "_combat" }, GOOP_EXCLUDE_TAGS)
 
         for i, v in pairs(players) do
@@ -727,8 +741,10 @@ local function OnHit_Slime(inst, attacker, target)
                 hitfx.entity:AddFollower():FollowSymbol(target.GUID, target.components.combat.hiteffectsymbol, 0, 0, 0)
             elseif target:HasTag("smallcreature") then
                 hitfx.Transform:SetPosition(0, .5, 0)
+			elseif target:HasTag("epic") then
+				hitfx.Transform:SetPosition(0, 2.5, 0)
             else
-                hitfx.Transform:SetPosition(0, 2, 0)
+                hitfx.Transform:SetPosition(0, 1.5, 0)
             end
 
             hitfx.target = target
@@ -900,6 +916,7 @@ local function secondaryproj_fn(symbol, overridebuild)
     end
 
     inst.persists = false
+    inst.planar_ammo = false
 
     if inst.powerlevel == nil then
         inst.powerlevel = 1
@@ -908,7 +925,6 @@ local function secondaryproj_fn(symbol, overridebuild)
     inst:AddComponent("locomotor")
 
     inst:AddComponent("weapon")
-    inst:AddComponent("projectile")
 
     inst:AddComponent("projectile")
     inst.components.projectile:SetSpeed(20)
@@ -919,7 +935,7 @@ local function secondaryproj_fn(symbol, overridebuild)
     inst.components.projectile:SetLaunchOffset(Vector3(1, 0.5, 0))
 
     inst:DoPeriodicTask(FRAMES, CollisionCheck)
-
+	print(2 - (inst.powerlevel * inst.powerlevel))
     inst:DoTaskInTime(2 - (inst.powerlevel * inst.powerlevel), inst.Remove)
 
     return inst
@@ -1038,7 +1054,7 @@ end
 local function GlassCut(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
     local attacker = inst.components.projectile.owner or nil
-    local cant_tags = { "noclaustrophobia", "wall", "invisible", "player", "companion", "INLIMBO" }
+    local cant_tags = { "noclaustrophobia", "wall", "invisible", "player", "companion", "INLIMBO", "abigail" }
 
     for i, v in ipairs(TheSim:FindEntities(x, y, z, 3, "_combat", cant_tags)) do
         if v:GetPhysicsRadius(0) > 1.5 and v:IsValid() and v.components.combat ~= nil and v.components.combat ~= nil and v.components.health ~= nil and not (v.sg ~= nil and (v.sg:HasStateTag("swimming") or v.sg:HasStateTag("invisible"))) and (v:HasTag("bird_mutant") or not v:HasTag("bird")) then
@@ -1060,7 +1076,8 @@ local function GlassCut(inst)
                     end
 		
 					local weapon = attacker.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) or nil
-
+					local damage = 7
+					
                     if v:HasTag("shadowcreature") or v.sg == nil or v.wixieammo_hitstuncd == nil and not (v.sg:HasStateTag("busy") or v.sg:HasStateTag("caninterrupt")) or v.sg:HasStateTag("frozen") then
                         v.wixieammo_hitstuncd = v:DoTaskInTime(8, function()
                             if v.wixieammo_hitstuncd ~= nil then
@@ -1069,12 +1086,23 @@ local function GlassCut(inst)
 
                             v.wixieammo_hitstuncd = nil
                         end)
-
-						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, (7 * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1), weapon)
+						
+						damage = (damage * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)
+						
+						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, inst.planar_ammo and 0 or damage, weapon, nil, {planar = inst.planar_ammo and damage or 0})
                     else
 						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, 0, weapon)
 
-                        v.components.health:DoDelta(-((7 * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)), false, attacker, false, attacker, false)
+						if v.components.planarentity then
+							if not inst.planar_ammo then
+								damage = (math.sqrt(damage * 4 + 64) - 8) * 4
+								v.components.planarentity:OnResistNonPlanarAttack(attacker)
+							else
+								v.components.planarentity:OnPlanarAttackUndefended(v)
+							end
+						end
+					
+                        v.components.health:DoDelta(-((damage * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)), false, attacker, false, attacker, false)
                     end
 
                     if v.components.sleeper ~= nil and v.components.sleeper:IsAsleep() then
@@ -1113,7 +1141,8 @@ local function GlassCut(inst)
                     end
 		
 					local weapon = attacker.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) or nil
-
+					local damage = 7
+					
                     if v:HasTag("shadowcreature") or v.sg == nil or v.wixieammo_hitstuncd == nil and not (v.sg:HasStateTag("busy") or v.sg:HasStateTag("caninterrupt")) or v.sg:HasStateTag("frozen") then
                         v.wixieammo_hitstuncd = v:DoTaskInTime(8, function()
                             if v.wixieammo_hitstuncd ~= nil then
@@ -1122,12 +1151,23 @@ local function GlassCut(inst)
 
                             v.wixieammo_hitstuncd = nil
                         end)
-
-						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, (7 * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1), weapon)
+						
+						damage = (damage * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)
+						
+						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, inst.planar_ammo and 0 or damage, weapon, nil, {planar = inst.planar_ammo and damage or 0})
                     else
 						v.components.combat:GetAttacked(weapon ~= nil and attacker or inst, 0, weapon)
 
-                        v.components.health:DoDelta(-((7 * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)), false, attacker, false, attacker, false)
+						if v.components.planarentity then
+							if not inst.planar_ammo then
+								damage = (math.sqrt(damage * 4 + 64) - 8) * 4
+								v.components.planarentity:OnResistNonPlanarAttack(attacker)
+							else
+								v.components.planarentity:OnPlanarAttackUndefended(v)
+							end
+						end
+					
+                        v.components.health:DoDelta(-((damage * inst.finallevel) * (attacker.components.combat ~= nil and attacker.components.combat.externaldamagemultipliers:Get() or 1)), false, attacker, false, attacker, false)
                     end
 
                     if v.components.sleeper ~= nil and v.components.sleeper:IsAsleep() then
@@ -1226,7 +1266,7 @@ local function slimeproj_fn()
 
     -- inst.impactfx = "slingshotammo_goop_impact"
 
-    inst.damage = 5
+    inst.damage = TUNING.SLINGSHOT_AMMO_DAMAGE_ROCKS
 
     inst.OnHit = OnHit_Slime
 
@@ -1434,7 +1474,7 @@ local function shadowclone_fn()
     return inst
 end
 
-local function fncommon(symbol, inv, overridebuild)
+local function fncommon(symbol, inv, overridebuild, special)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -1443,6 +1483,7 @@ local function fncommon(symbol, inv, overridebuild)
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
+    MakeInventoryFloatable(inst, "small", .2, { .85, .9, .85 })
 
     inst.AnimState:SetRayTestOnBB(true)
     inst.AnimState:SetBank("slingshotammo")
@@ -1450,7 +1491,12 @@ local function fncommon(symbol, inv, overridebuild)
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:OverrideSymbol("rock", overridebuild or "wixieammo", symbol)
 
-    inst:AddTag("molebait")
+	if special then
+		inst:AddTag("wixieammo_special")
+	else
+		inst:AddTag("wixieammo_basic")
+	end
+	
     inst:AddTag("slingshotammo")
     inst:AddTag("reloaditem_ammo")
 
@@ -1468,37 +1514,38 @@ local function fncommon(symbol, inv, overridebuild)
 
     inst:AddComponent("tradable")
 
-    inst:AddComponent("edible")
-    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
-    inst.components.edible.hungervalue = 0
-
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_TINYITEM
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_PELLET
 
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/" .. inv .. ".xml"
-    inst.components.inventoryitem:SetSinks(true)
 
-    inst:AddComponent("bait")
     MakeHauntableLaunch(inst)
 
     return inst
 end
 
 local function cracker_fn()
-    local inst = fncommon("rock", "slingshotammo_firecrackers")
+    local inst = fncommon("rock", "slingshotammo_firecrackers", nil, false)
 
     if not TheWorld.ismastersim then
         return inst
     end
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.edible.healthvalue = -10
+    inst.components.inventoryitem:SetSinks(true)
 
+    inst:AddComponent("bait")
     return inst
 end
 
 local function honey_fn()
-    local inst = fncommon("slow", "slingshotammo_honey")
+    local inst = fncommon("slow", "slingshotammo_honey", nil, false)
 
     if not TheWorld.ismastersim then
         return inst
@@ -1506,15 +1553,15 @@ local function honey_fn()
 
     inst:AddComponent("edible")
     inst.components.edible.foodtype = FOODTYPE.GOODIES
-    inst.components.edible.hungervalue = 0
-    inst.components.edible.sanityvalue = 1
-    inst.components.edible.healthvalue = 1
+    inst.components.edible.hungervalue = 0.5 --Adjusted to account for skill tree's extra ammo per craft AND UM's stats for Honey * 3. -CB
+    inst.components.edible.sanityvalue = 0.65
+    inst.components.edible.healthvalue = 0.2
 
     return inst
 end
 
 local function rubber_fn()
-    local inst = fncommon("marble", "slingshotammo_rubber")
+    local inst = fncommon("marble", "slingshotammo_rubber", nil, false)
 
     if not TheWorld.ismastersim then
         return inst
@@ -1524,57 +1571,80 @@ local function rubber_fn()
 end
 
 local function tremor_fn()
-    local inst = fncommon("poop", "slingshotammo_tremor")
+    local inst = fncommon("poop", "slingshotammo_tremor", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
     return inst
 end
 
 local function moonrock_fn()
-    local inst = fncommon("freeze", "slingshotammo_moonrock")
+    local inst = fncommon("freeze", "slingshotammo_moonrock", nil, false)
 
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.edible.sanityvalue = 1
     return inst
 end
 
 local function moonglass_fn()
-    local inst = fncommon("gold", "slingshotammo_moonglass")
+    local inst = fncommon("gold", "slingshotammo_moonglass", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.components.inventoryitem:SetSinks(true)
 
     return inst
 end
 
 local function salt_fn()
-    local inst = fncommon("thulecite", "slingshotammo_salt")
+    local inst = fncommon("thulecite", "slingshotammo_salt", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+	
+    inst:AddComponent("fuel")
+    inst.components.fuel.fuelvalue = TUNING.MED_FUEL / 7.5 --Fuels Salt Shaker 3000 by the same amount as 1 Salt Crystal. -CB
+    inst.components.fuel.fueltype = FUELTYPE.SALT
+	
+    inst:AddComponent("bait")
     return inst
 end
 
 local function goop_fn()
-    local inst = fncommon("trinket_1", "slingshotammo_goop")
+    local inst = fncommon("trinket_1", "slingshotammo_goop", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
     end
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.GENERIC
+    inst.components.edible.hungervalue = 0.94 --Glommer Goop divided by 10 -CB
+    inst.components.edible.sanityvalue = -5
+    inst.components.edible.healthvalue = 4
 
+    inst:AddComponent("fuel")
+    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL / 10
     return inst
 end
 
 local function slime_fn()
-    local inst = fncommon("freeze", "slingshotammo_slime", "wixieammo_IA")
+    local inst = fncommon("freeze", "slingshotammo_slime", "wixieammo_IA", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
@@ -1584,22 +1654,36 @@ local function slime_fn()
 end
 
 local function lazy_fn()
-    local inst = fncommon("slow", "slingshotammo_lazy", "wixieammo_IA")
+    local inst = fncommon("slow", "slingshotammo_lazy", "wixieammo_IA", nil, true)
 
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("molebait")
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
+    inst.components.edible.hungervalue = 1
+    inst.components.inventoryitem:SetSinks(true)
+	
+    inst:AddComponent("bait")
     return inst
 end
 
 local function shadow_fn()
-    local inst = fncommon("rock", "slingshotammo_shadow", "wixieammo_IA")
+    local inst = fncommon("rock", "slingshotammo_shadow", "wixieammo_IA", true)
 
     if not TheWorld.ismastersim then
         return inst
     end
-
+    inst:AddTag("waterproofer") --Does not get wet, like Nightmare Fuel! -CB
+    inst:AddComponent("waterproofer")
+    inst.components.waterproofer:SetEffectiveness(0)
+    inst:AddComponent("fuel")
+    inst.components.fuel.fueltype = FUELTYPE.NIGHTMARE
+    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL / 15
+    inst:AddComponent("repairer")
+    inst.components.repairer.repairmaterial = MATERIALS.NIGHTMARE
+    inst.components.repairer.finiteusesrepairvalue = TUNING.NIGHTMAREFUEL_FINITEUSESREPAIRVALUE / 15
     return inst
 end
 
@@ -1651,7 +1735,6 @@ local function Rebound(inst, attacker, target)
 
                             local rad = math.rad(inst:GetAngleToPoint(tx, ty, tz))
 
-                            -- for i = 1, 50 do
                             target:DoTaskInTime(0.1, function(target)
                                 if target ~= nil then
                                     -- local x, y, z = inst.Transform:GetWorldPosition()
@@ -1681,7 +1764,6 @@ local function Rebound(inst, attacker, target)
                                     end
                                 end
                             end)
-                            -- end
                         end
 
                         local rubberband = SpawnPrefab("slingshotammo_rubber_rebound")
@@ -1915,38 +1997,7 @@ local function Tremor(inst)
         if (v:HasTag("bird_mutant") or not v:HasTag("bird")) and not v:HasTag("stageusher") then
             if not (v.components.follower ~= nil and v.components.follower:GetLeader() ~= nil and v.components.follower:GetLeader():HasTag("player")) then
                 local distsq = v ~= nil and x ~= nil and v:GetDistanceSqToPoint(x, y, z) or 1
-                for i = 1, 50 do
-                    inst:DoTaskInTime((i - 1) / 50, function(inst)
-                        local px, py, pz = v.Transform:GetWorldPosition()
-                        if px ~= nil then
-                            local distancemultiplier = 1 + (distsq / 10)
-                            local rad = math.rad(v:GetAngleToPoint(px, py, pz))
-                            local velx = math.cos(rad)  -- * 4.5
-                            local velz = -math.sin(rad) -- * 4.5
-
-                            local giantreduction = v:HasTag("epic") and 3 or v:HasTag("smallcreature") and 0.8 or 1
-
-                            local dx, dy, dz = px + (((2 / (i + 1)) * velx) / giantreduction) / distancemultiplier, py, pz + (((2 / (i + 1)) * velz) / giantreduction) / distancemultiplier
-
-                            -- local dx, dy, dz = px - (((FRAMES * 4) * velx) / multiplierplayer) * inst.Transform:GetScale(), py, pz - (((FRAMES * 4) * velz) / multiplierplayer) * inst.Transform:GetScale()
-
-                            local ground = TheWorld.Map:IsPassableAtPoint(dx, dy, dz)
-                            local boat = TheWorld.Map:GetPlatformAtPoint(dx, dz)
-                            local ocean = TheWorld.Map:IsOceanAtPoint(dx, dy, dz)
-
-
-                            if not (v.sg ~= nil and (v.sg:HasStateTag("swimming") or v.sg:HasStateTag("invisible"))) then
-                                if v ~= nil and v.components.locomotor ~= nil and dx ~= nil and (ground or boat or ocean and v.components.locomotor:CanPathfindOnWater() or v.components.tiletracker ~= nil and not v:HasTag("whale")) then
-                                    --[[if ocean and v.components.amphibiouscreature and not v.components.amphibiouscreature.in_water then
-											v.components.amphibiouscreature:OnEnterOcean()
-										end]]
-
-                                    v.Transform:SetPosition(dx, dy, dz)
-                                end
-                            end
-                        end
-                    end)
-                end
+                WixieShove(inst, v, 2, false, distsq)
 
                 if v:IsValid() and v.components.combat ~= nil and v.components.combat ~= nil and v.components.health ~= nil and not v.components.health:IsDead() then
                     inst.finaldamage = TUNING.SLINGSHOT_AMMO_DAMAGE_GOLD * (1 + inst.powerlevel) / 2
@@ -1954,12 +2005,21 @@ local function Tremor(inst)
                     if inst.attacker ~= nil and inst.attacker.components ~= nil and inst.attacker.components.combat then
                         inst.finaldamage = inst.finaldamage * (inst.attacker.components.combat ~= nil and inst.attacker.components.combat.externaldamagemultipliers:Get() or 1)
                     end
+		
+					if v.components.planarentity then
+						if not inst.planar_ammo then
+							inst.finaldamage = (math.sqrt(inst.finaldamage * 4 + 64) - 8) * 4
+							v.components.planarentity:OnResistNonPlanarAttack(inst.attacker)
+						else
+							v.components.planarentity:OnPlanarAttackUndefended(v)
+						end
+					end
 
                     if no_aggro(inst.attacker, v) then
                         v.components.combat:SetShouldAvoidAggro(inst.attacker)
                     end
 
-                    v.components.combat:GetAttacked(inst, inst.finaldamage, inst)
+                    v.components.combat:GetAttacked(inst, inst.planar_ammo and 0 or inst.finaldamage, inst, nil, {planar = inst.planar_ammo and inst.finaldamage or 0})
 
                     if v.components.sleeper ~= nil and v.components.sleeper:IsAsleep() then
                         v.components.sleeper:WakeUp()
@@ -2010,6 +2070,7 @@ local function tremmorfn()
 
     inst.tremorcount = 0
     inst.attacker = nil
+    inst.planar_ammo = nil
 
     inst:DoTaskInTime(0, Tremor)
     inst:DoPeriodicTask(1, Tremor)
@@ -2065,11 +2126,96 @@ local function crackerexplosion_fn()
     return inst
 end
 
+local function Shock_Rebound(inst, attacker, target)
+    if target ~= nil then
+        local set_attacker = attacker ~= nil and attacker or inst
+
+        ImpactFx(inst, attacker, target)
+
+        if not target:HasTag("wall") and not target:HasTag("structure") and target.components.health ~= nil and not target.components.health:IsDead() then
+            if no_aggro(set_attacker, target) then
+                target.components.combat:SetShouldAvoidAggro(attacker)
+            end
+
+            if target.components.combat ~= nil then
+				target.components.combat:GetAttacked(inst, 20, inst, "electric")
+            end
+
+            if target.components.sleeper ~= nil and target.components.sleeper:IsAsleep() then
+                target.components.sleeper:WakeUp()
+            end
+
+            if target.components.combat ~= nil then
+                target.components.combat:SetTarget(set_attacker)
+                target.components.combat:RemoveShouldAvoidAggro(attacker)
+            end
+				
+			if target.components.health ~= nil and target.components.health:IsDead() then
+				attacker:PushEvent("killed", { victim = target, attacker = attacker })
+			end
+
+			if not (
+				target:HasTag("electricdamageimmune") or
+				(target.components.inventory ~= nil and target.components.inventory:IsInsulated())
+			) and
+				target:GetIsWet()
+			then
+				SpawnPrefab("electrichitsparks"):AlignToTarget(target, inst, true)
+			end
+	   end
+    end
+
+    inst:Remove()
+end
+
+local function shockscrap_rebound()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst)
+    inst.AnimState:SetBank("bishop_attack")
+    inst.AnimState:SetBuild("bishop_attack")
+    inst.AnimState:PlayAnimation("idle")
+
+    -- weapon (from weapon component) added to pristine state for optimization
+    inst:AddTag("weapon")
+
+    -- projectile (from projectile component) added to pristine state for optimization
+    inst:AddTag("projectile")
+
+    RemovePhysicsColliders(inst)
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("weapon")
+
+    inst:AddComponent("projectile")
+    inst.components.projectile:SetSpeed(13)
+    inst.components.projectile:SetOnHitFn(Shock_Rebound)
+	
+    inst.impactfx = "bishop_charge_hit"
+
+    inst.persists = false
+    inst:DoTaskInTime(2, inst.Remove)
+
+    MakeHauntableLaunch(inst)
+
+    return inst
+end
+
 return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_firecrackers_proj_secondary", crackerproj_fn, assets, prefabs),
     Prefab("firecrackers_slingshot", fn, assets_firecrackers, prefabs_firecrackers),
     Prefab("slingshot_explode_firecrackers", crackerexplosion_fn, assets, prefabs),
-    Prefab("slingshotammo_honey", honey_fn, assets, prefabs),
+    Prefab(TUNING.DSTU ~= nil and TUNING.DSTU.WIXIE ~= nil and TUNING.DSTU.WIXIE and "slingshotammo_honey" or "slingshotammo_honey_null", honey_fn, assets, prefabs),
     Prefab("slingshotammo_honey_proj_secondary", honeyproj_fn, assets, prefabs),
     Prefab("slingshotammo_honey_impact", impacthoneyfn, assets, prefabs),
     Prefab("slingshotammo_goldshatter", impactgoldfn, assets, prefabs),
@@ -2084,7 +2230,7 @@ return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock", moonrock_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock_proj_secondary", moonrockproj_fn, assets, prefabs),
     Prefab("slingshotammo_moonrock_impact", impactmoonrockfn, assets, prefabs),
-    Prefab("slingshotammo_moonglass", moonglass_fn, assets, prefabs),
+    Prefab(TUNING.DSTU ~= nil and TUNING.DSTU.WIXIE ~= nil and TUNING.DSTU.WIXIE and "slingshotammo_moonglass" or "slingshotammo_moonglass_null", moonglass_fn, assets, prefabs),
     Prefab("slingshotammo_moonglass_proj_secondary", moonglassproj_fn, assets, prefabs),
     Prefab("slingshotammo_salt", salt_fn, assets, prefabs),
     Prefab("slingshotammo_salt_proj_secondary", saltproj_fn, assets, prefabs),
@@ -2100,4 +2246,5 @@ return Prefab("slingshotammo_firecrackers", cracker_fn, assets, prefabs),
     Prefab("slingshotammo_lazy_impact", impactlazyfn, assets, prefabs),
     Prefab("slingshotammo_shadow", shadow_fn, assets, prefabs),
     Prefab("slingshotammo_shadow_proj_secondary", shadowproj_fn, assets, prefabs),
-    Prefab("wixie_shadowclone", shadowclone_fn, assets, prefabs)
+    Prefab("wixie_shadowclone", shadowclone_fn, assets, prefabs),
+	Prefab("slingshotammo_scrapfeather_rebound", shockscrap_rebound)

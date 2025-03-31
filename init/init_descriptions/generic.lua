@@ -48,6 +48,8 @@ DESCRIBE.CALIFORNIAKING = "This dish is gruesome."
 DESCRIBE.CCTRINKET_DON = "I can only make out the words \"Don\" and \"Guide\"."
 DESCRIBE.CCTRINKET_JAZZY = "Looks pretty jazzy."
 DESCRIBE.CCTRINKET_FREDDO = "The name \"Freddo\" is etched onto it."
+DESCRIBE.CCTRINKET_NAMES = "Someone probably needs this."
+
 -- Content Creators
 DESCRIBE.UNCOMPROMISING_RAT = "They're rataliating!"
 DESCRIBE.UNCOMPROMISING_RATHERD = "It must lead to their labo-rat-ory."
@@ -472,10 +474,10 @@ ANNOUNCE.ANNOUNCE_CHARGE_SUCCESS_ELECTROCUTED = "OW! What a shocking result!"
 ----UNDER THE WEATHER----
 DESCRIBE.WINONA_TOOLBOX = "I had one like this for all of my scientific tools."
 ACTIONFAIL.WINONATOOLBOX = "Well, I never said these were my tools."
-DESCRIBE.WINONA_CATAPULT_ITEM = "I'm not trained to handle heavy machinery."
-DESCRIBE.WINONA_SPOTLIGHT_ITEM = "I'm not trained to handle heavy machinery."
-DESCRIBE.WINONA_BATTERY_LOW_ITEM = "I'm not trained to handle heavy machinery."
-DESCRIBE.WINONA_BATTERY_HIGH_ITEM = "I'm not trained to handle heavy machinery."
+DESCRIBE.WINONA_CATAPULT_ITEM_UM = "I'm not trained to handle heavy machinery."
+DESCRIBE.WINONA_SPOTLIGHT_ITEM_UM = "I'm not trained to handle heavy machinery."
+DESCRIBE.WINONA_BATTERY_LOW_ITEM_UM = "I'm not trained to handle heavy machinery."
+DESCRIBE.WINONA_BATTERY_HIGH_ITEM_UM = "I'm not trained to handle heavy machinery."
 DESCRIBE.POWERCELL = "It's like carrying around a little box of electricty."
 DESCRIBE.WINONA_UPGRADEKIT_ELECTRICAL =
 "Of course I know how this works! I could've made one myself."

@@ -3,8 +3,6 @@ DESCRIBE = GLOBAL.STRINGS.CHARACTERS.WURT.DESCRIBE
 ACTIONFAIL = GLOBAL.STRINGS.CHARACTERS.WURT.ACTIONFAIL
 
 --	[ 		Wurt Descriptions		]	--
-DESCRIBE.DEERCLOPS = "He not look happy, florp."
-
 ANNOUNCE.DREADEYE_SPOOKED = "W-what that?"
 ANNOUNCE.ANNOUNCE_HARDCORE_RES = "Not go in there, florp."
 ANNOUNCE.ANNOUNCE_WINONAGEN = "Weenowna-lady need to do it!"
@@ -394,10 +392,10 @@ ANNOUNCE.ANNOUNCE_CHARGE_SUCCESS_ELECTROCUTED = "Gurgle!"
 DESCRIBE.WINONA_TOOLBOX =
 "Weenowna-lady not like me playing with things inside..."
 ACTIONFAIL.WINONATOOLBOX = "Can't open lock!"
-DESCRIBE.WINONA_CATAPULT_ITEM = "One of tough ladies things."
-DESCRIBE.WINONA_SPOTLIGHT_ITEM = "One of tough ladies things."
-DESCRIBE.WINONA_BATTERY_LOW_ITEM = "One of tough ladies things."
-DESCRIBE.WINONA_BATTERY_HIGH_ITEM = "One of tough ladies things."
+DESCRIBE.WINONA_CATAPULT_ITEM_UM = "One of tough ladies things."
+DESCRIBE.WINONA_SPOTLIGHT_ITEM_UM = "One of tough ladies things."
+DESCRIBE.WINONA_BATTERY_LOW_ITEM_UM = "One of tough ladies things."
+DESCRIBE.WINONA_BATTERY_HIGH_ITEM_UM = "One of tough ladies things."
 DESCRIBE.POWERCELL = "Do not lick!"
 DESCRIBE.WINONA_UPGRADEKIT_ELECTRICAL = "Give box to lights."
 DESCRIBE.MINERHAT_ELECTRICAL = "Has a box now."
