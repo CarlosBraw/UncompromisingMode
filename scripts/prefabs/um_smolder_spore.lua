@@ -227,7 +227,7 @@ local function OnEaten(inst, eater)
 	if eater.components.sanity ~= nil then
 		if eater:HasTag("plantkin") then -- The spores are alive. L for canibaLism.
 			eater.components.sanity:DoDelta(-10)
-		elseif eater:HasTag("pyromaniac") or eater.prefab == "wanda" then
+		elseif eater:HasTag("pyromaniac") or eater:HasTag("heatresistant") or eater.prefab == "wanda" then
 			eater.components.sanity:DoDelta(10)
 		end
 	end
